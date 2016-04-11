@@ -21,7 +21,7 @@ class Restserver
      * Version
      * @var string
      */
-    protected $version = '1.3.2';
+    protected $version = '1.4.0';
 
     /**
      * Configuration
