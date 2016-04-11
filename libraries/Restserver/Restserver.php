@@ -36,13 +36,14 @@ class Restserver
         'ajax_only' => FALSE,
         'auth_http' => FALSE,
         'cache' => FALSE,
+        'debug' => FALSE,
         'log' => FALSE,
         'log_driver' => 'file',
         'log_db_name' => 'rest', // Database only
         'log_db_table' => 'log', // Database only
         'log_file_path' => '', // File only
         'log_file_name' => 'rest.log', // File only
-        'log_extra' => FALSE 
+        'log_extra' => FALSE
     );
 
     /**
@@ -136,19 +137,32 @@ class Restserver
         // Charge l'instance de CodeIgniter
         $this->CI =& get_instance();
 
-        // Initialise la configuration, si elle existe
+        // Initialise la configuration
+        $this->initialize($config);
+
+        // Change les paquets
+        $this->CI->load->library('form_validation');
+        $this->CI->load->helper('url');
+    }
+    
+    /**
+     * Initialisation
+     * @param array $config
+     */
+    public function initialize(array $config)
+    {
+        // Si il y a une arborescence
         if (isset($config['restserver'])) {
-            $this->config = array_merge($this->config, $config['restserver']);
+            $config = $config['restserver'];
         }
+        
+        // Merge la configuration
+        $this->config = array_merge($this->config, $config);
 
         // Si le journal est activé
         if ($this->config['log']) {
             $this->CI->benchmark->mark('restserver_start');
         }
-
-        // Change les paquets
-        $this->CI->load->library('form_validation');
-        $this->CI->load->helper('url');
     }
 
     /**
@@ -422,7 +436,7 @@ class Restserver
 
         // Envoi les entetes
         if (ENVIRONMENT === 'development') {
-            $this->CI->output->set_header("X-RestServer: v$this->version");
+            $this->_set_header("X-RestServer: v$this->version");
         }
 
         // Si le data est du JSON
@@ -524,27 +538,27 @@ class Restserver
     private function _cross_domain()
     {
         // Autorisation des méthode
-        $this->CI->output->set_header('Access-Control-Allow-Methods: '.implode(',', $this->config['allow_methods']));
+        $this->_set_header('Access-Control-Allow-Methods: '.implode(',', $this->config['allow_methods']));
 
         // Autorisation des en-têtes
-        $this->CI->output->set_header('Access-Control-Allow-Headers: '.implode(',', $this->config['allow_headers']));
+        $this->_set_header('Access-Control-Allow-Headers: '.implode(',', $this->config['allow_headers']));
 
         // Autorisation credential
         if ($this->config['allow_credentials'] && $this->config['allow_credentials']) {
-            $this->CI->output->set_header('Access-Control-Allow-Credentials: true');
+            $this->_set_header('Access-Control-Allow-Credentials: true');
         }
 
         // Autorise tout le monde
         if ($this->config['allow_origin'] === FALSE) {
-            $this->CI->output->set_header('Access-Control-Allow-Origin: '.(( ! empty($this->headers['Origin'])) ? $this->headers['Origin'] : $this->ip));
+            $this->_set_header('Access-Control-Allow-Origin: '.(( ! empty($this->headers['Origin'])) ? $this->headers['Origin'] : $this->ip));
 
         // Autorise une liste
         } else if (is_array($this->config['allow_origin']) && in_array($this->ip, $this->config['allow_origin'])) {
-            $this->CI->output->set_header('Access-Control-Allow-Origin: '.$this->ip);
+            $this->_set_header('Access-Control-Allow-Origin: '.$this->ip);
             
         // Autrement seulement un host
         } else if (!empty($this->config['allow_origin'])) {
-            $this->CI->output->set_header('Access-Control-Allow-Origin: '.$this->config['allow_origin']);
+            $this->_set_header('Access-Control-Allow-Origin: '.$this->config['allow_origin']);
         }
     }
 
@@ -831,6 +845,22 @@ class Restserver
                 }
         }
     }
+    
+    /**
+     * Retourne les documentations
+     */
+    private function _set_header($value)
+    {
+        // Si le mode débug est activé, utilise le header natif
+        if ($this->config['debug']) {
+            header($value);
+            
+        // SUtilise le header du framework
+        } else {
+            $this->CI->output->set_header($value);
+        }
+    }
+    
 }
 
 /* End of file Restserver.php */
