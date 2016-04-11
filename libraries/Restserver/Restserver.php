@@ -544,7 +544,7 @@ class Restserver
             
         // Autrement seulement un host
         } else if (!empty($this->config['allow_origin'])) {
-            $this->CI->output->set_header('Access-Control-Allow-Origin: '.$this->config['allow_credentials']);
+            $this->CI->output->set_header('Access-Control-Allow-Origin: '.$this->config['allow_origin']);
         }
     }
 
