@@ -81,12 +81,12 @@ class Restserver_field
             return NULL;
         }
 
-        return [
+        return array(
             'field' => $this->input,
             'label' => $this->label,
             'rules' => $this->rules,
             'errors' => $this->errors
-        ];
+        );
     }
 }
 
