@@ -21,7 +21,7 @@ class Restserver
      * Version
      * @var string
      */
-    protected $version = '1.4.2';
+    protected $version = '1.4.3';
 
     /**
      * Configuration
@@ -247,9 +247,22 @@ class Restserver
             }
         }
 
+        // Si la documentation HAR est demandée (http://www.softwareishard.com/blog/har-12-spec/#request)
+        if (isset($this->input['get']['har']) && $har = $this->input['get']['har']) {
+            // Récupère les fields pour la documentation
+            $doc = $this->_get_doc_har($har);
+
+            // Si il existe une docuementation
+            if (!empty($doc)) {
+                $this->response($doc, 200);
+
+                return TRUE;
+            }
+        }
+
         // Récupère les règles
         $rules = $this->_get_rules();
-        
+
         // Si des règles existent
         if ( ! empty($rules)) {
             // Vérification des données entrantes
@@ -456,11 +469,11 @@ class Restserver
             $this->CI->benchmark->mark('restserver_end');
             $this->exectime = $this->CI->benchmark->elapsed_time('restserver_start', 'restserver_end');
 
-            $log_model = new stdClass();
+            $log_model         = new stdClass();
             $log_model->method = ( ! empty($this->method)) ? $this->method : NULL;
-            $log_model->url = ( ! empty($this->url)) ? $this->url : NULL;
-            $log_model->ip = ( ! empty($this->ip)) ? $this->ip : NULL;
-            $log_model->auth = ($this->auth) ? 1 : 0;
+            $log_model->url    = ( ! empty($this->url)) ? $this->url : NULL;
+            $log_model->ip     = ( ! empty($this->ip)) ? $this->ip : NULL;
+            $log_model->auth   = ($this->auth) ? 1 : 0;
 
             if ($this->config['log_extra']) {
                 $this->output = $this->CI->output->get_output();
@@ -638,9 +651,9 @@ class Restserver
 
         // Renvoi les données entrantes
         return array(
-            'get' => (is_array($get)) ? $get : array(),
-            'post' => (is_array($post)) ? $post : array(),
-            'put' => (is_array($put)) ? $put : array(),
+            'get'    => (is_array($get)) ? $get : array(),
+            'post'   => (is_array($post)) ? $post : array(),
+            'put'    => (is_array($put)) ? $put : array(),
             'delete' => (is_array($delete)) ? $delete : array()
         );
     }
@@ -800,6 +813,49 @@ class Restserver
         }
 
         return $docs;
+    }
+
+    /**
+     * Retourne la documentation HAR en fonction de la méthode demandée http://www.softwareishard.com/blog/har-12-spec/#postData
+     * @return array
+     */
+    private function _get_doc_har($method)
+    {
+        $doc = array();
+
+        // Si le tableau des champs n'est pas vide
+        if (!empty($this->fields)) {
+            foreach ($this->fields as $field) {
+                $doc['method']      = strtoupper($method);
+                $doc['cookies']     = array();
+                $doc['url']         = $this->_get_url();
+                $doc['httpVersion'] = $this->CI->input->server('SERVER_PROTOCOL');
+                $doc['queryString'] = array();
+                //$doc['postData'] = array(); optionnal?
+                foreach ($this->fields as $field) {
+                    if (in_array('required_'. strtolower($method), explode('|', $field->rules))) {
+                        $fielddoc = array(
+                            'name'  => $field->input,
+                            'value' => $field->label
+                        );
+                        $doc['queryString'][] = $fielddoc;
+                    }
+                }
+
+                $doc['headers'] = array(
+                    array(
+                        "name"  => "Accept",
+                        "value" => "application/json"
+                    ),
+                    array(
+                        "name"  => "Content-Type",
+                        "value" => "application/json"
+                    ),
+                );
+            }
+        }
+
+        return $doc;
     }
 
     /**
