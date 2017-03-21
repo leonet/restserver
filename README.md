@@ -29,6 +29,13 @@ class MY_Controller extends CI_Controller
 require(APPPATH.'/third_party/restserver/core/Restserver_controller.php');
 ```
 
+Only if you use Form_validation.
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+require(APPPATH.'/third_party/restserver/libraries/MY_Form_validation.php');
+```
+
 ### Step 3 Configuration
 Duplicate configuration file `./application/third_party/restserver/config/restserver.php` in `./application/config/restserver.php`.
 
