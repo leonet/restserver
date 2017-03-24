@@ -21,7 +21,7 @@ class Restserver
      * Version
      * @var string
      */
-    protected $version = '1.5.0';
+    protected $version = '1.5.1';
 
     /**
      * Configuration
@@ -145,7 +145,7 @@ class Restserver
         $this->CI->load->helper('url');
         
         // Verifie si le /third_party/restserver/libraries/MY_Form_validation.php est chargé
-        if ( ! method_exists($this->form_validation, 'require_post')) {
+        if ( ! method_exists($this->CI->form_validation, 'required_post')) {
             exit("Can not load MY_Form_validation.php");
         }
     }
