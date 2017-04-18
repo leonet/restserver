@@ -383,6 +383,32 @@ class Restserver
 
         return $filters;
     }
+    
+    /**
+     * Sérialisation des tries
+     * @param string $sort
+     * @return array
+     */
+    public function sort($sort)
+    {
+        $sorts = array();
+
+        if ( ! empty($sort)) {
+            $sort = json_decode($sort, TRUE);
+
+            foreach ($sort as $value) {
+                if (isset($value['property'])) {
+                    if ( ! isset($sorts[$value['property']])) {
+                        $sorts[$value['property']] = $value['direction'];
+                    } else {
+                        $sorts[$value['property']] .= ',' . $value['direction'];
+                    }
+                }
+            }
+        }
+
+        return $sorts;
+    }
 
     /**
      * Les données de la méthode Get
