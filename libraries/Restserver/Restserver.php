@@ -21,7 +21,7 @@ class Restserver
      * Version
      * @var string
      */
-    protected $version = '1.5.1';
+    protected $version = '1.5.2';
 
     /**
      * Configuration
@@ -282,7 +282,7 @@ class Restserver
                 $this->response(array(
                     'status' => FALSE,
                     'error' => (!empty($errors)) ? $errors : 'Unsupported data validation'
-                ), 403);
+                ), 400);
 
                 return FALSE;
             }
