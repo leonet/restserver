@@ -281,7 +281,7 @@ class Restserver
                 
                 $this->response(array(
                     'status' => FALSE,
-                    'error' => (!empty($errors)) ? $errors : 'Unsupported data validation'
+                    'error'  => (!empty($errors)) ? $errors : 'Unsupported data validation'
                 ), 400);
 
                 return FALSE;
