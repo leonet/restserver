@@ -4,7 +4,7 @@ REST Full Server for Codeigniter 3
 ## Requirements
 
 - PHP 5.3.x (Composer requirement)
-- CodeIgniter 3.0.x
+- CodeIgniter 3.x
 
 ## Installation
 ### Step 1 Installation by Composer
@@ -26,18 +26,18 @@ class MY_Controller extends CI_Controller
     }
 }
 
-require(APPPATH.'/third_party/restserver/core/Restserver_controller.php');
+require(FCPATH.'vendor/maltyxx/restserver/core/Restserver_controller.php');
 ```
 
 Only if you use Form_validation.
 ```php
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-require(APPPATH.'/third_party/restserver/libraries/MY_Form_validation.php');
+require(FCPATH.'/vendor/maltyxx/restserver/libraries/MY_Form_validation.php');
 ```
 
 ### Step 3 Configuration
-Duplicate configuration file `./application/third_party/restserver/config/restserver.php` in `./application/config/restserver.php`.
+Duplicate configuration file `./application/vendor/maltyxx/restserver/config/restserver.php` in `./application/config/restserver.php`.
 
 ### Step 4 Examples
 Controller file is located in `./application/controllers/Server.php`.
