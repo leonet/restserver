@@ -33,7 +33,7 @@ Only if you use Form_validation.
 ```php
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-require(FCPATH.'/vendor/maltyxx/restserver/libraries/MY_Form_validation.php');
+require(FCPATH.'vendor/maltyxx/restserver/libraries/MY_Form_validation.php');
 ```
 
 ### Step 3 Configuration
