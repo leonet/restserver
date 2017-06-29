@@ -21,7 +21,7 @@ class Restserver
      * Version
      * @var string
      */
-    protected $version = '2.0.0';
+    protected $version = '2.0.1';
 
     /**
      * Configuration
@@ -652,12 +652,18 @@ class Restserver
      */
     private function _get_input()
     {
-        $get = $this->CI->input->get();
+        $get = NULL;
         $post = NULL;
         $put = NULL;
         $delete = NULL;
 
         switch ($this->method) {
+            case 'get':
+                $_get = $this->CI->input->get();
+                $_uri = $this->uri->ruri_to_assoc();
+                
+                // Si les données entrantes sont en URI autrement utilise le GET
+                $get = (empty($_uri['id'])) ? $_get : array('id' => (int)$_uri['id']);                
             case 'post':
                 $post = $this->CI->input->post();
 
@@ -684,6 +690,7 @@ class Restserver
         return array(
             'get'    => (is_array($get)) ? $get : array(),
             'post'   => (is_array($post)) ? $post : array(),
+            'patch'    => (is_array($patch)) ? $patch : array(),
             'put'    => (is_array($put)) ? $put : array(),
             'delete' => (is_array($delete)) ? $delete : array()
         );
