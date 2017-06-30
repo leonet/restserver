@@ -21,7 +21,7 @@ class Restserver
      * Version
      * @var string
      */
-    protected $version = '2.0.4';
+    protected $version = '2.0.5';
 
     /**
      * Configuration
@@ -665,6 +665,7 @@ class Restserver
                 
                 // Fusionne les données Get + Uri
                 $get = array_merge((array)$_get, (array)$_uri);
+                break;
             case 'post':
                 $post = $this->CI->input->post();
 
