@@ -663,8 +663,8 @@ class Restserver
                 $_get = $this->CI->input->get();
                 $_uri = $this->CI->uri->ruri_to_assoc();
                 
-                // Si les données entrantes sont en URI autrement utilise le GET
-                $get = (!empty($_uri)) ? $_uri : $_get;
+                // Fusionne les données Get + Uri
+                $get = array_merge((array)$_get, (array)$_uri);
             case 'post':
                 $post = $this->CI->input->post();
 
