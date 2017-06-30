@@ -21,7 +21,7 @@ class Restserver
      * Version
      * @var string
      */
-    protected $version = '2.0.2';
+    protected $version = '2.0.3';
 
     /**
      * Configuration
@@ -655,6 +655,7 @@ class Restserver
         $get = NULL;
         $post = NULL;
         $put = NULL;
+        $patch = NULL;
         $delete = NULL;
 
         switch ($this->method) {
