@@ -1,20 +1,31 @@
 <?php
+/**
+ * REST Full server for Codeigniter 3
+ * 
+ * @package Restserver
+ * @author  Yoann Vanitou <yvanitou@gmail.com>
+ * @license http://www.apache.org/licenses/LICENSE-2.0
+ * @link    https://github.com/maltyxx/restserver
+ * @since   Version 2.1.0
+ * @filesource
+ *
+ */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Form Validation Class
  *
- * @package     CodeIgniter
- * @subpackage  Libraries
- * @category    Validation
- * @author      EllisLab Dev Team
- * @link        http://codeigniter.com/user_guide/libraries/form_validation.html
+ * @package    CodeIgniter
+ * @subpackage Libraries
+ * @category   Validation
+ * @author     EllisLab Dev Team
+ * @link       http://codeigniter.com/user_guide/libraries/form_validation.html
  */
 class MY_Form_validation extends CI_Form_validation {
     /**
      * Request method
      * 
-     * @var string 
+     * @var string
      */
     public $request_method = '';
 

@@ -1,13 +1,20 @@
 <?php
+/**
+ * REST Full server for Codeigniter 3
+ * 
+ * @author Yoann Vanitou <yvanitou@gmail.com>
+ * @license http://www.apache.org/licenses/LICENSE-2.0
+ * @link   https://github.com/maltyxx/restserver
+ * @since   Version 2.1.0
+ * @filesource
+ *
+ */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require(__DIR__.'/Restserver_field.php');
 
 /** 
  * Restserver (Librairie REST Serveur)
- * @author Yoann VANITOU
- * @license http://www.apache.org/licenses/LICENSE-2.0
- * @link https://github.com/maltyxx/restserver
  */
 class Restserver
 {
@@ -18,43 +25,33 @@ class Restserver
     protected $CI;
     
     /**
-     * Version
-     * @var string
-     */
-    protected $version = '2.0.5';
-
-    /**
      * Configuration
      * @var array
      */
     protected $config = array(
-        'allow_methods' => array('GET', 'POST', 'PUT', 'DELETE'),
-        'allow_headers' => array('X-RestServer'),
+        'allow_methods'     => array('GET', 'POST', 'PUT', 'DELETE'),
+        'allow_headers'     => array('X-RestServer'),
         'allow_credentials' => FALSE,
-        'allow_origin' => FALSE,
-        'force_https' => FALSE,
-        'ajax_only' => FALSE,
-        'auth_http' => FALSE,
-        'cache' => FALSE,
-        'debug' => FALSE,
-        'log' => FALSE,
-        'log_driver' => 'file',
-        'log_db_name' => 'rest', // Database only
-        'log_db_table' => 'log', // Database only
-        'log_file_path' => '', // File only
-        'log_file_name' => 'rest.log', // File only
-        'log_extra' => FALSE
+        'allow_origin'      => FALSE,
+        'force_https'       => FALSE,
+        'ajax_only'         => FALSE,
+        'auth_http'         => FALSE,
+        'cache'             => FALSE,
+        'debug'             => FALSE,
+        'log'               => FALSE,
+        'log_driver'        => 'file',
+        'log_db_name'       => 'rest', // Database only
+        'log_db_table'      => 'log', // Database only
+        'log_file_path'     => '', // File only
+        'log_file_name'     => 'rest.log', // File only
+        'log_extra'         => FALSE
     );
 
     /**
      * Protocole
      * @var array
      */
-    protected $protocol = array(
-        'status' => FALSE,
-        'error' => NULL,
-        'value' => NULL
-    );
+    protected $protocol;
 
     /**
      * Instance du controlleur
@@ -142,8 +139,11 @@ class Restserver
 
         // Change les paquets
         $this->CI->load->library('form_validation');
-        $this->CI->load->helper('url');
-        
+        $this->CI->load->helper(array(
+            'url',
+            'restserver'
+        ));
+                
         // Verifie si le /third_party/restserver/libraries/MY_Form_validation.php est chargé
         if ( ! method_exists($this->CI->form_validation, 'required_post')) {
             exit("Can not load MY_Form_validation.php");
@@ -168,6 +168,9 @@ class Restserver
         if ($this->config['log']) {
             $this->CI->benchmark->mark('restserver_start');
         }
+        
+        // Récupération du protocol
+        $this->protocol = rest_protocol();
     }
 
     /**
@@ -180,12 +183,12 @@ class Restserver
     public function run(Restserver_Controller &$controller, $call, $params)
     {
         // Collecte les données
-        $this->controller =& $controller;
-        $this->method = $this->_get_method();
-        $this->url = $this->_get_url();
-        $this->ip = $this->_get_ip();
-        $this->headers = $this->_get_headers();
-        $this->input = $this->_get_input();
+        $this->controller = & $controller;
+        $this->method     = $this->_get_method();
+        $this->url        = $this->_get_url();
+        $this->ip         = $this->_get_ip();
+        $this->headers    = $this->_get_headers();
+        $this->input      = $this->_get_input();
 
         // Envoi les autorisations pour le cross-domain
         $this->_cross_domain();
@@ -303,6 +306,7 @@ class Restserver
     /**
      * Déclaration de la configuration d'un champ
      * @param Restserver_field|array $field
+     * @deprecated since 2.1.0
      */
     public function add_field($field)
     {
@@ -315,6 +319,26 @@ class Restserver
         } else if ($field instanceof Restserver_field) {
             $this->fields[] = $field;
         }
+    }
+    
+    /**
+     * Configuration des règles
+     * @param string|array $field
+     * @param string $label
+     * @param string|array $rules
+     * @param string $errors
+     * @return Restserver
+     */
+    public function set_rules($field)
+    {
+        // Si la configuration est un tableau
+        if (is_array($field)) {
+            foreach ($field as $config) {
+                $this->fields[] = new Restserver_rule($config);
+            }
+        }
+        
+        return $this;
     }
 
     /**
@@ -478,11 +502,6 @@ class Restserver
         // Définition du code HTTP
         $this->CI->output->set_status_header($code);
 
-        // Envoi les entetes
-        if (ENVIRONMENT === 'development') {
-            $this->_set_header("X-RestServer: v$this->version");
-        }
-
         // Si le data est du JSON
         $json = json_encode($data);
 
@@ -521,15 +540,6 @@ class Restserver
             // Enregistre le journal
             $this->_set_log($log_model);
         }
-    }
-
-    /**
-     * Retourne la version
-     * @return string
-     */
-    public function get_version()
-    {
-        return $this->version;
     }
 
     /**
@@ -721,11 +731,11 @@ class Restserver
         $rules = array();
 
         // Si le tableau des champs n'est pas vide
-        if ( ! empty($this->fields)) {
-            foreach ($this->fields as $field) {
-                if ($field instanceof Restserver_field) {
+        if ( ! empty($this->rules)) {
+            foreach ($this->rules as $value) {
+                if ($value instanceof Restserver_rule) {
                     // Récupération des règles
-                    $rule = $field->getRules();
+                    $rule = $value->get();
                     
                     // Si il n'y a pas de règle
                     if ($rule !== NULL) {

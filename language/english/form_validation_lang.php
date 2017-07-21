@@ -1,4 +1,10 @@
 <?php
+/**
+ * REST Full server for Codeigniter 3
+ * @author Yoann Vanitou <yvanitou@gmail.com>
+ * @link   https://github.com/maltyxx/restserver
+ *
+ */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $lang['form_validation_required']              = 'The {field} field is required.';
