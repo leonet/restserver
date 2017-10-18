@@ -501,9 +501,16 @@ class Restserver
 
         // Définition du code HTTP
         $this->CI->output->set_status_header($code);
-
-        // Si le data est du JSON
-        $json = json_encode($data);
+        
+        /*
+         * Si le data est du JSON
+         *
+         * Pour produire un JSON plus clair :
+         * JSON_UNESCAPED_SLASHES = Ne pas échapper les caractères /. Disponible depuis PHP 5.4.0.
+         * JSON_UNESCAPED_UNICODE = Encode les caractères multi-octets Unicode littéralement (le comportement par
+         *                          défaut est de les échapper, i.e. \uXXXX). Disponible depuis PHP 5.4.0.
+         */
+        $json = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         // Format de sortie
         if (!empty($json)) {
