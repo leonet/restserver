@@ -134,9 +134,6 @@ class Restserver
         // Charge l'instance de CodeIgniter
         $this->CI =& get_instance();
 
-        // Initialise la configuration
-        $this->initialize($config);
-
         // Change les paquets
         $this->CI->load->library('form_validation');
         $this->CI->load->helper(array(
@@ -148,6 +145,9 @@ class Restserver
         if ( ! method_exists($this->CI->form_validation, 'required_post')) {
             exit("Can not load MY_Form_validation.php");
         }
+        
+        // Initialise la configuration
+        $this->initialize($config);
     }
     
     /**
