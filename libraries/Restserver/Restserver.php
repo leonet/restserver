@@ -889,23 +889,29 @@ class Restserver
                 
                 foreach ($this->fields as $field) {
                     if (in_array('required_'. strtolower($method), explode('|', $field->rules))) {
-                        
-                        $fielddoc = array(
-                            'name'  => $field->input,
-                            'value' => $field->label,
-                            'comment' => $field->comment,
-                        );
-                        
+                                                
                         // Si c'est un GET
                         if ($method == 'get') {
-                            $doc['queryString'][] = $fielddoc;
+                            $doc['queryString'][] = array(
+                                'name'  => $field->input,
+                                'value' => $field->label,
+                                'comment' => $field->comment,
+                            );
                             
                         // Pour toutes les autres requêtes
                         } else {
-                            $doc['postData']['params'][] = $fielddoc;
+                            $doc['postData']['mimeType'] = "application/json";
+                            $doc['postData']['text'][]   = array(
+                                $field->input => $field->label
+                            );
                         }
                     }
                 }
+                
+                if (!empty($doc['postData']['text'])) {
+                    $doc['postData']['text'] = json_encode($doc['postData']['text']);
+                }
+                
                 $doc['headers'] = array(
                     array(
                         "name"  => "Accept",
