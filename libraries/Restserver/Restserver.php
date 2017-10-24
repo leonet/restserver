@@ -133,12 +133,17 @@ class Restserver
     {
         // Charge l'instance de CodeIgniter
         $this->CI =& get_instance();
+        
+        $package_path = FCPATH.'vendor/maltyxx/restserver';
 
-        // Change les paquets
-        $this->CI->load->library('form_validation');
+        // Change les paquets        
+        $this->CI->load->add_package_path($package_path)
+            ->library('form_validation')
+            ->helper('restserver')
+            ->remove_package_path($package_path);
+        
         $this->CI->load->helper(array(
-            'url',
-            'restserver'
+            'url'
         ));
                 
         // Verifie si le /third_party/restserver/libraries/MY_Form_validation.php est chargé
@@ -170,7 +175,7 @@ class Restserver
         }
         
         // Récupération du protocol
-        $this->protocol = rest_protocol();
+        $this->protocol = restserver_protocol();
     }
 
     /**

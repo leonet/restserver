@@ -35,7 +35,7 @@ abstract class Restserver_controller extends MY_Controller implements Restserver
      * @param string $call
      * @param array $params
      */
-    protected function _remap($call, array $params = array())
+    public function _remap($call, array $params = array())
     {
         $this->restserver->run($this, $call, $params);
     }
