@@ -134,9 +134,6 @@ class Restserver
         // Charge l'instance de CodeIgniter
         $this->CI =& get_instance();
 
-        // Initialise la configuration
-        $this->initialize($config);
-
         // Change les paquets
         $this->CI->load->library('form_validation');
         $this->CI->load->helper(array(
@@ -148,6 +145,9 @@ class Restserver
         if ( ! method_exists($this->CI->form_validation, 'required_post')) {
             exit("Can not load MY_Form_validation.php");
         }
+        
+        // Initialise la configuration
+        $this->initialize($config);
     }
     
     /**
@@ -872,7 +872,6 @@ class Restserver
     private function _get_doc_har($method)
     {
         $doc = array();
-
         // Si le tableau des champs n'est pas vide
         if (!empty($this->fields)) {
             foreach ($this->fields as $field) {
@@ -881,17 +880,27 @@ class Restserver
                 $doc['url']         = $this->_get_url();
                 $doc['httpVersion'] = $this->CI->input->server('SERVER_PROTOCOL');
                 $doc['queryString'] = array();
-                //$doc['postData'] = array(); optionnal?
+                $doc['postData'] = array();
+                
                 foreach ($this->fields as $field) {
                     if (in_array('required_'. strtolower($method), explode('|', $field->rules))) {
+                        
                         $fielddoc = array(
                             'name'  => $field->input,
-                            'value' => $field->label
+                            'value' => $field->label,
+                            'comment' => $field->comment,
                         );
-                        $doc['queryString'][] = $fielddoc;
+                        
+                        // Si c'est un GET
+                        if ($method == 'get') {
+                            $doc['queryString'][] = $fielddoc;
+                            
+                        // Pour toutes les autres requêtes
+                        } else {
+                            $doc['postData']['params'][] = $fielddoc;
+                        }
                     }
                 }
-
                 $doc['headers'] = array(
                     array(
                         "name"  => "Accept",
@@ -904,9 +913,9 @@ class Restserver
                 );
             }
         }
-
         return $doc;
     }
+
 
     /**
      * Insert les évènements dans un journal
