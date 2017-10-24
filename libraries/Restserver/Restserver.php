@@ -900,9 +900,8 @@ class Restserver
                             
                         // Pour toutes les autres requêtes
                         } else {
-                            $doc['postData']['mimeType'] = "application/json";
-                            $doc['postData']['text'][]   = array(
-                                $field->input => $field->label
+                            $doc['postData']['mimeType']     = "application/json";
+                            $doc['postData']['text'][$field->input] = $field->label;
                             );
                         }
                     }
