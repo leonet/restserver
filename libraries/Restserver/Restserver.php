@@ -902,7 +902,6 @@ class Restserver
                         } else {
                             $doc['postData']['mimeType']     = "application/json";
                             $doc['postData']['text'][$field->input] = $field->label;
-                            );
                         }
                     }
                 }
