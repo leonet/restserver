@@ -881,14 +881,25 @@ class Restserver
                 $doc['url']         = $this->_get_url();
                 $doc['httpVersion'] = $this->CI->input->server('SERVER_PROTOCOL');
                 $doc['queryString'] = array();
-                //$doc['postData'] = array(); optionnal?
+                $doc['postData'] = array();
+                
                 foreach ($this->fields as $field) {
                     if (in_array('required_'. strtolower($method), explode('|', $field->rules))) {
+                        
                         $fielddoc = array(
                             'name'  => $field->input,
-                            'value' => $field->label
+                            'value' => $field->label,
+                            'comment' => $field->comment,
                         );
-                        $doc['queryString'][] = $fielddoc;
+                        
+                        // Si c'est un GET
+                        if ($method == 'get') {
+                            $doc['queryString'][] = $fielddoc;
+                            
+                        // Pour toutes les autres requêtes
+                        } else {
+                            $doc['postData']['params'][] = $fielddoc;
+                        }
                     }
                 }
 
