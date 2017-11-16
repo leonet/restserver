@@ -12,6 +12,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require(__DIR__.'/Restserver_field.php');
+require(__DIR__.'/Restserver_rule.php');
 
 /** 
  * Restserver (Librairie REST Serveur)
@@ -900,7 +901,7 @@ class Restserver
                             
                         // Pour toutes les autres requêtes
                         } else {
-                            $doc['postData']['mimeType']     = "application/json";
+                            $doc['postData']['mimeType']            = "application/json";
                             $doc['postData']['text'][$field->input] = $field->label;
                         }
                     }
