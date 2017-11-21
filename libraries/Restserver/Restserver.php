@@ -1,7 +1,7 @@
 <?php
 /**
  * REST Full server for Codeigniter 3
- * 
+ *
  * @author Yoann Vanitou <yvanitou@gmail.com>
  * @license http://www.apache.org/licenses/LICENSE-2.0
  * @link   https://github.com/maltyxx/restserver
@@ -11,10 +11,10 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require(__DIR__.'/Restserver_field.php');
-require(__DIR__.'/Restserver_rule.php');
+require(__DIR__ . '/Restserver_field.php');
+require(__DIR__ . '/Restserver_rule.php');
 
-/** 
+/**
  * Restserver (Librairie REST Serveur)
  */
 class Restserver
@@ -24,28 +24,28 @@ class Restserver
      * @var object $CI
      */
     protected $CI;
-    
+
     /**
      * Configuration
      * @var array
      */
     protected $config = array(
-        'allow_methods'     => array('GET', 'POST', 'PUT', 'DELETE'),
-        'allow_headers'     => array('X-RestServer'),
+        'allow_methods' => array('GET', 'POST', 'PUT', 'DELETE'),
+        'allow_headers' => array('X-RestServer'),
         'allow_credentials' => FALSE,
-        'allow_origin'      => FALSE,
-        'force_https'       => FALSE,
-        'ajax_only'         => FALSE,
-        'auth_http'         => FALSE,
-        'cache'             => FALSE,
-        'debug'             => FALSE,
-        'log'               => FALSE,
-        'log_driver'        => 'file',
-        'log_db_name'       => 'rest', // Database only
-        'log_db_table'      => 'log', // Database only
-        'log_file_path'     => '', // File only
-        'log_file_name'     => 'rest.log', // File only
-        'log_extra'         => FALSE
+        'allow_origin' => FALSE,
+        'force_https' => FALSE,
+        'ajax_only' => FALSE,
+        'auth_http' => FALSE,
+        'cache' => FALSE,
+        'debug' => FALSE,
+        'log' => FALSE,
+        'log_driver' => 'file',
+        'log_db_name' => 'rest', // Database only
+        'log_db_table' => 'log', // Database only
+        'log_file_path' => '', // File only
+        'log_file_name' => 'rest.log', // File only
+        'log_extra' => FALSE
     );
 
     /**
@@ -122,7 +122,7 @@ class Restserver
 
     /**
      * Les alias
-     * @var type 
+     * @var type
      */
     protected $alias = array();
 
@@ -134,28 +134,28 @@ class Restserver
     {
         // Charge l'instance de CodeIgniter
         $this->CI =& get_instance();
-        
-        $package_path = FCPATH.'vendor/maltyxx/restserver';
+
+        $package_path = FCPATH . 'vendor/maltyxx/restserver';
 
         // Change les paquets        
         $this->CI->load->add_package_path($package_path)
             ->library('form_validation')
             ->helper('restserver')
             ->remove_package_path($package_path);
-        
+
         $this->CI->load->helper(array(
             'url'
         ));
-                
+
         // Verifie si le /third_party/restserver/libraries/MY_Form_validation.php est chargé
-        if ( ! method_exists($this->CI->form_validation, 'required_post')) {
+        if (!method_exists($this->CI->form_validation, 'required_post')) {
             exit("Can not load MY_Form_validation.php");
         }
-        
+
         // Initialise la configuration
         $this->initialize($config);
     }
-    
+
     /**
      * Initialisation
      * @param array $config
@@ -166,7 +166,7 @@ class Restserver
         if (isset($config['restserver'])) {
             $config = $config['restserver'];
         }
-        
+
         // Merge la configuration
         $this->config = array_merge($this->config, $config);
 
@@ -174,7 +174,7 @@ class Restserver
         if ($this->config['log']) {
             $this->CI->benchmark->mark('restserver_start');
         }
-        
+
         // Récupération du protocol
         $this->protocol = restserver_protocol();
     }
@@ -189,12 +189,12 @@ class Restserver
     public function run(Restserver_Controller &$controller, $call, $params)
     {
         // Collecte les données
-        $this->controller = & $controller;
-        $this->method     = $this->_get_method();
-        $this->url        = $this->_get_url();
-        $this->ip         = $this->_get_ip();
-        $this->headers    = $this->_get_headers();
-        $this->input      = $this->_get_input();
+        $this->controller = &$controller;
+        $this->method = $this->_get_method();
+        $this->url = $this->_get_url();
+        $this->ip = $this->_get_ip();
+        $this->headers = $this->_get_headers();
+        $this->input = $this->_get_input();
 
         // Envoi les autorisations pour le cross-domain
         $this->_cross_domain();
@@ -209,24 +209,24 @@ class Restserver
         }
 
         // Si le protocole SSL est obligatoire
-        if ($this->config['force_https'] && ! $this->_is_sslprotocol()) {
-			$this->response(array(
+        if ($this->config['force_https'] && !$this->_is_sslprotocol()) {
+            $this->response(array(
                 'status' => FALSE,
                 'error' => 'Unsupported protocol'
             ), 403);
 
             return FALSE;
-		}
+        }
 
         // Si la requête est en ajax
-        if ($this->config['ajax_only'] && ! $this->CI->input->is_ajax_request()) {
-			$this->response(array(
+        if ($this->config['ajax_only'] && !$this->CI->input->is_ajax_request()) {
+            $this->response(array(
                 'status' => FALSE,
                 'error' => 'Only AJAX requests are accepted'
             ), 505);
 
             return FALSE;
-		}
+        }
 
         // Authentification
         if ($this->config['auth_http']) {
@@ -236,7 +236,7 @@ class Restserver
         }
 
         // Si la méthode existe
-        if ( ! method_exists($this->controller, $this->method)) {
+        if (!method_exists($this->controller, $this->method)) {
             $this->response(array(
                 'status' => FALSE,
                 'error' => 'Method not found'
@@ -251,7 +251,7 @@ class Restserver
             $docs = $this->_get_docs();
 
             // Si il existe une docuementation
-            if ( ! empty($docs)) {
+            if (!empty($docs)) {
                 $this->response(array(
                     'status' => TRUE,
                     'value' => $docs
@@ -276,21 +276,20 @@ class Restserver
 
         // Récupère les règles
         $rules = $this->_get_rules();
-
         // Si des règles existent
-        if ( ! empty($rules)) {
+        if (!empty($rules)) {
             // Vérification des données entrantes
             $this->CI->form_validation->set_data($this->input[$this->method]);
             $this->CI->form_validation->set_rules($rules);
             $this->CI->form_validation->set_error_delimiters('', '');
-            
+
             // Si le validateur a rencontré une ou plusieurs erreurs
             if ($this->CI->form_validation->run() === FALSE) {
                 $errors = $this->CI->form_validation->error_array();
-                
+
                 $this->response(array(
                     'status' => FALSE,
-                    'error'  => (!empty($errors)) ? $errors : 'Unsupported data validation'
+                    'error' => (!empty($errors)) ? $errors : 'Unsupported data validation'
                 ), 400);
 
                 return FALSE;
@@ -321,12 +320,12 @@ class Restserver
             foreach ($field as $value) {
                 $this->add_field($value);
             }
-        // Si le data est une instance
+            // Si le data est une instance
         } else if ($field instanceof Restserver_field) {
             $this->fields[] = $field;
         }
     }
-    
+
     /**
      * Configuration des règles
      * @param string|array $field
@@ -343,7 +342,7 @@ class Restserver
                 $this->fields[] = new Restserver_rule($config);
             }
         }
-        
+
         return $this;
     }
 
@@ -397,12 +396,12 @@ class Restserver
     {
         $filters = array();
 
-        if ( ! empty($filter)) {
+        if (!empty($filter)) {
             $filter = json_decode($filter, TRUE);
 
             foreach ($filter as $value) {
                 if (isset($value['property'])) {
-                    if ( ! isset($filters[$value['property']])) {
+                    if (!isset($filters[$value['property']])) {
                         $filters[$value['property']] = $value['value'];
                     } else {
                         $filters[$value['property']] .= ',' . $value['value'];
@@ -413,7 +412,7 @@ class Restserver
 
         return $filters;
     }
-    
+
     /**
      * Sérialisation des tries
      * @param string $sort
@@ -423,12 +422,12 @@ class Restserver
     {
         $sorts = array();
 
-        if ( ! empty($sort)) {
+        if (!empty($sort)) {
             $sort = json_decode($sort, TRUE);
 
             foreach ($sort as $value) {
                 if (isset($value['property'])) {
-                    if ( ! isset($sorts[$value['property']])) {
+                    if (!isset($sorts[$value['property']])) {
                         $sorts[$value['property']] = $value['direction'];
                     } else {
                         $sorts[$value['property']] .= ',' . $value['direction'];
@@ -480,7 +479,7 @@ class Restserver
      * @return mixed
      */
     public function delete($index = NULL, $xss_clean = FALSE)
-    {        
+    {
         return $this->_fetch_from_array('delete', $index, $xss_clean);
     }
 
@@ -532,18 +531,18 @@ class Restserver
             $this->CI->benchmark->mark('restserver_end');
             $this->exectime = $this->CI->benchmark->elapsed_time('restserver_start', 'restserver_end');
 
-            $log_model         = new stdClass();
-            $log_model->method = ( ! empty($this->method)) ? $this->method : NULL;
-            $log_model->url    = ( ! empty($this->url)) ? $this->url : NULL;
-            $log_model->ip     = ( ! empty($this->ip)) ? $this->ip : NULL;
-            $log_model->auth   = ($this->auth) ? 1 : 0;
+            $log_model = new stdClass();
+            $log_model->method = (!empty($this->method)) ? $this->method : NULL;
+            $log_model->url = (!empty($this->url)) ? $this->url : NULL;
+            $log_model->ip = (!empty($this->ip)) ? $this->ip : NULL;
+            $log_model->auth = ($this->auth) ? 1 : 0;
 
             if ($this->config['log_extra']) {
                 $this->output = $this->CI->output->get_output();
 
-                $log_model->headers = ( ! empty($this->headers)) ? json_encode($this->headers) : NULL;
-                $log_model->input = ( ! empty($this->input)) ? json_encode($this->input) : NULL;
-                $log_model->output = ( ! empty($this->output)) ? $this->output : NULL;
+                $log_model->headers = (!empty($this->headers)) ? json_encode($this->headers) : NULL;
+                $log_model->input = (!empty($this->input)) ? json_encode($this->input) : NULL;
+                $log_model->output = (!empty($this->output)) ? $this->output : NULL;
             }
 
             $log_model->httpcode = $code;
@@ -572,16 +571,16 @@ class Restserver
         if (is_array($index)) {
             $output = array();
 
-			foreach ($index as $i) {
-				$output[$i] = $this->_fetch_from_array($method, $i, $xss_clean);
-			}
+            foreach ($index as $i) {
+                $output[$i] = $this->_fetch_from_array($method, $i, $xss_clean);
+            }
 
-			return $output;
+            return $output;
         }
 
         if (!isset($this->input[$method][$index])) {
             return NULL;
-		}
+        }
 
         if ($xss_clean === TRUE) {
             return $this->CI->security->xss_clean($this->input[$method][$index]);
@@ -605,10 +604,10 @@ class Restserver
     private function _cross_domain()
     {
         // Autorisation des méthode
-        $this->_set_header('Access-Control-Allow-Methods: '.implode(',', $this->config['allow_methods']));
+        $this->_set_header('Access-Control-Allow-Methods: ' . implode(',', $this->config['allow_methods']));
 
         // Autorisation des en-têtes
-        $this->_set_header('Access-Control-Allow-Headers: '.implode(',', $this->config['allow_headers']));
+        $this->_set_header('Access-Control-Allow-Headers: ' . implode(',', $this->config['allow_headers']));
 
         // Autorisation credential
         if ($this->config['allow_credentials'] && $this->config['allow_credentials']) {
@@ -617,15 +616,15 @@ class Restserver
 
         // Autorise tout le monde
         if ($this->config['allow_origin'] === FALSE) {
-            $this->_set_header('Access-Control-Allow-Origin: '.(( ! empty($this->headers['Origin'])) ? $this->headers['Origin'] : $this->ip));
+            $this->_set_header('Access-Control-Allow-Origin: ' . ((!empty($this->headers['Origin'])) ? $this->headers['Origin'] : $this->ip));
 
-        // Autorise une liste
+            // Autorise une liste
         } else if (is_array($this->config['allow_origin']) && in_array($this->ip, $this->config['allow_origin'])) {
-            $this->_set_header('Access-Control-Allow-Origin: '.$this->ip);
-            
-        // Autrement seulement un host
+            $this->_set_header('Access-Control-Allow-Origin: ' . $this->ip);
+
+            // Autrement seulement un host
         } else if (!empty($this->config['allow_origin'])) {
-            $this->_set_header('Access-Control-Allow-Origin: '.$this->config['allow_origin']);
+            $this->_set_header('Access-Control-Allow-Origin: ' . $this->config['allow_origin']);
         }
     }
 
@@ -636,7 +635,7 @@ class Restserver
     private function _get_method()
     {
         $method = $this->CI->input->server('REQUEST_METHOD');
-        return ( ! empty($method)) ? strtolower($method) : '';
+        return (!empty($method)) ? strtolower($method) : '';
     }
 
     /**
@@ -646,7 +645,7 @@ class Restserver
     private function _get_url()
     {
         $url = current_url();
-        return ( ! empty($url)) ? $url : '';
+        return (!empty($url)) ? $url : '';
     }
 
     /**
@@ -656,7 +655,7 @@ class Restserver
     private function _get_ip()
     {
         $ip = $this->CI->input->ip_address();
-        return ( ! empty($ip)) ? $ip : '';
+        return (!empty($ip)) ? $ip : '';
     }
 
     /**
@@ -666,7 +665,7 @@ class Restserver
     private function _get_headers()
     {
         $headers = $this->CI->input->request_headers(TRUE);
-        return ( ! empty($headers)) ? $headers : array();
+        return (!empty($headers)) ? $headers : array();
     }
 
     /**
@@ -685,7 +684,7 @@ class Restserver
             case 'get':
                 $_get = $this->CI->input->get();
                 $_uri = $this->CI->uri->ruri_to_assoc();
-                
+
                 // Fusionne les données Get + Uri
                 $get = array_merge((array)$_get, (array)$_uri);
                 break;
@@ -713,10 +712,10 @@ class Restserver
 
         // Renvoi les données entrantes
         return array(
-            'get'    => (is_array($get)) ? $get : array(),
-            'post'   => (is_array($post)) ? $post : array(),
-            'patch'  => (is_array($patch)) ? $patch : array(),
-            'put'    => (is_array($put)) ? $put : array(),
+            'get' => (is_array($get)) ? $get : array(),
+            'post' => (is_array($post)) ? $post : array(),
+            'patch' => (is_array($patch)) ? $patch : array(),
+            'put' => (is_array($put)) ? $put : array(),
             'delete' => (is_array($delete)) ? $delete : array()
         );
     }
@@ -743,21 +742,22 @@ class Restserver
     {
         $rules = array();
 
-        // Si le tableau des champs n'est pas vide
-        if ( ! empty($this->rules)) {
-            foreach ($this->rules as $value) {
-                if ($value instanceof Restserver_rule) {
-                    // Récupération des règles
-                    $rule = $value->get();
-                    
-                    // Si il n'y a pas de règle
-                    if ($rule !== NULL) {
-                        $rules[] = $rule;
+        // Si des champs existent
+        if (!empty($this->fields)) {
+            foreach ($this->fields as $field) {
+                // Si se sont des objects de type Restserver_rule
+                if ($field instanceof Restserver_rule) {
+                    // Si il y a des rules
+                    if ($field->rules !== null) {
+                        $rules[] = array(
+                            "field" => $field->field,
+                            "rules" => $field->rules,
+                            "label" => $field->label
+                        );
                     }
                 }
             }
         }
-
         return $rules;
     }
 
@@ -770,15 +770,15 @@ class Restserver
         $alias = array();
 
         // Si des champs existent
-        if ( ! empty($this->fields)) {
+        if (!empty($this->fields)) {
             foreach ($this->fields as $field) {
-                // Si se sont des objects de type Restserver_field
-                if ($field instanceof Restserver_field) {
+                // Si se sont des objects de type Restserver_rule
+                if ($field instanceof Restserver_rule) {
                     // Si il y a plusieurs ojects
                     if (strstr($field->alias, '|') !== FALSE) {
                         $alias_array = explode('|', $field->alias);
 
-                    // Si il y a qu'un seul object
+                        // Si il y a qu'un seul object
                     } else {
                         $alias_array = array($field->alias);
                     }
@@ -791,8 +791,8 @@ class Restserver
                         }
 
                         // Valeur de l'entrée
-                        if ((isset($this->input[$this->method][$field->input]))) {
-                            $input_value = $this->input[$this->method][$field->input];
+                        if ((isset($this->input[$this->method][$field->field]))) {
+                            $input_value = $this->input[$this->method][$field->field];
                         } else {
                             $input_value = NULL;
                         }
@@ -820,9 +820,9 @@ class Restserver
 
         $return[$space] = $return;
 
-        if ( ! empty($spaces)) {
+        if (!empty($spaces)) {
             $return[$space] = $this->_namespace_recursive($spaces, $value, $return[$space]);
-        } else  {
+        } else {
             $return[$space] =& $value;
         }
 
@@ -838,7 +838,7 @@ class Restserver
         $input = array();
 
         // Si des champs existent
-        if ( ! empty($this->fields)) {
+        if (!empty($this->fields)) {
             foreach ($this->fields as $field) {
 
                 // Si se sont des objects de type Restserver_field
@@ -847,7 +847,7 @@ class Restserver
                     if (isset($this->input[$this->method][$field->input])) {
                         $input[$field->input] =& $this->input[$this->method][$field->input];
 
-                    // Si elle n'existe pas ça valeur est NULL
+                        // Si elle n'existe pas ça valeur est NULL
                     } else {
                         $input[$field->input] = NULL;
                     }
@@ -867,7 +867,7 @@ class Restserver
         $docs = array();
 
         // Si le tableau des champs n'est pas vide
-        if ( ! empty($this->fields)) {
+        if (!empty($this->fields)) {
             foreach ($this->fields as $field) {
                 if ($field instanceof Restserver_field) {
                     $docs[$field->input] = $field->comment;
@@ -888,43 +888,43 @@ class Restserver
         // Si le tableau des champs n'est pas vide
         if (!empty($this->fields)) {
             foreach ($this->fields as $field) {
-                $doc['method']      = strtoupper($method);
-                $doc['cookies']     = array();
-                $doc['url']         = $this->_get_url();
+                $doc['method'] = strtoupper($method);
+                $doc['cookies'] = array();
+                $doc['url'] = $this->_get_url();
                 $doc['httpVersion'] = $this->CI->input->server('SERVER_PROTOCOL');
                 $doc['queryString'] = array();
                 $doc['postData'] = array();
-                
+
                 foreach ($this->fields as $field) {
-                    if (in_array('required_'. strtolower($method), explode('|', $field->rules))) {
-                                                
+                    if (in_array('required_' . strtolower($method), explode('|', $field->rules))) {
+
                         // Si c'est un GET
                         if ($method == 'get') {
                             $doc['queryString'][] = array(
-                                'name'  => $field->input,
+                                'name' => $field->input,
                                 'value' => $field->label,
                                 'comment' => $field->comment,
                             );
-                            
-                        // Pour toutes les autres requêtes
+
+                            // Pour toutes les autres requêtes
                         } else {
-                            $doc['postData']['mimeType']            = "application/json";
+                            $doc['postData']['mimeType'] = "application/json";
                             $doc['postData']['text'][$field->input] = $field->label;
                         }
                     }
                 }
-                
+
                 if (!empty($doc['postData']['text'])) {
                     $doc['postData']['text'] = json_encode($doc['postData']['text']);
                 }
-                
+
                 $doc['headers'] = array(
                     array(
-                        "name"  => "Accept",
+                        "name" => "Accept",
                         "value" => "application/json"
                     ),
                     array(
-                        "name"  => "Content-Type",
+                        "name" => "Content-Type",
                         "value" => "application/json"
                     ),
                 );
@@ -950,34 +950,34 @@ class Restserver
                 break;
             case 'file':
             default:
-                $file_path = ( ! empty($this->config['log_file_path'])) ? $this->config['log_file_path'] : sys_get_temp_dir();
+                $file_path = (!empty($this->config['log_file_path'])) ? $this->config['log_file_path'] : sys_get_temp_dir();
                 $file = "$file_path/{$this->config['log_file_name']}";
 
                 if (touch($file)) {
                     if (is_file($file) && is_writable($file)) {
-                        $log = "method: $log_model->methode".PHP_EOL;
-                        $log .= " url: $log_model->url".PHP_EOL;
-                        $log .= " ip: $log_model->ip".PHP_EOL;
-                        $log .= " user: $log_model->user".PHP_EOL;
-                        $log .= " password: $log_model->password".PHP_EOL;
-                        $log .= " key: $log_model->key".PHP_EOL;
+                        $log = "method: $log_model->methode" . PHP_EOL;
+                        $log .= " url: $log_model->url" . PHP_EOL;
+                        $log .= " ip: $log_model->ip" . PHP_EOL;
+                        $log .= " user: $log_model->user" . PHP_EOL;
+                        $log .= " password: $log_model->password" . PHP_EOL;
+                        $log .= " key: $log_model->key" . PHP_EOL;
 
                         if ($this->config['log_extra']) {
-                            $log .= " headers: $log_model->headers".PHP_EOL;
-                            $log .= " input: $log_model->input".PHP_EOL;
-                            $log .= " output: $log_model->output".PHP_EOL;
+                            $log .= " headers: $log_model->headers" . PHP_EOL;
+                            $log .= " input: $log_model->input" . PHP_EOL;
+                            $log .= " output: $log_model->output" . PHP_EOL;
                         }
 
-                        $log .= " httpcode: $log_model->httpcode".PHP_EOL;
-                        $log .= " exectime: $log_model->exectime".PHP_EOL;
-                        $log .= " date: $log_model->dateinsert".PHP_EOL;
+                        $log .= " httpcode: $log_model->httpcode" . PHP_EOL;
+                        $log .= " exectime: $log_model->exectime" . PHP_EOL;
+                        $log .= " date: $log_model->dateinsert" . PHP_EOL;
 
                         error_log($log, 3, $file);
                     }
                 }
         }
     }
-    
+
     /**
      * Retourne les documentations
      */
@@ -986,13 +986,13 @@ class Restserver
         // Si le mode débug est activé, utilise le header natif
         if ($this->config['debug']) {
             header($value);
-            
-        // SUtilise le header du framework
+
+            // SUtilise le header du framework
         } else {
             $this->CI->output->set_header($value);
         }
     }
-    
+
 }
 
 /* End of file Restserver.php */
