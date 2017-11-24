@@ -14,7 +14,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * Protocole REST
  *
- * @author		@author Yoann Vanitou <yvanitou@gmail.com>
+ * @author Yoann Vanitou <yvanitou@gmail.com>
  *
  */
 
@@ -32,5 +32,6 @@ if (!function_exists('restserver_protocol')) {
         );
     }
 }
+
 /* End of file Restserver_helper.php */
 /* Location: ./application/helpers/Restserver_helper.php */
