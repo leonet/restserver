@@ -6,26 +6,26 @@ class Cross_domain
 {
     protected $config;
     protected $output;
-            
-    function __construct(\Restserver\Core\Config $config, \Restserver\Core\Input $input, \Restserver\Core\Output $output)
+
+    public function __construct(\Restserver\Core\Config $config, \Restserver\Core\Input $input, \Restserver\Core\Output $output)
     {
         $this->config =& $config->getInstance();
         $this->input  =& $input->getInstance();
         $this->output =& $output->getInstance();
     }
-    
+
     public function run()
     {
-        
+
         // Récupération des en-têtes
         $headers = $this->input->headers();
-        
+
         // Récupératino de l'ip
         $ip = $this->input->ip();
-        
+
         // Récupération de l'origine
         $origin = $this->config->get('allow_origin');
-        
+
         // Autorisation des méthode
         $this->output->set_header('Access-Control-Allow-Methods: '.implode(',', $this->config->get('allow_methods')));
 
@@ -36,19 +36,18 @@ class Cross_domain
         if ($this->config->get('allow_credentials') &&  $this->config->get('allow_credentials')) {
             $this->output->set_header('Access-Control-Allow-Credentials: true');
         }
-        
+
         // Autorise tout le monde
         if ($this->config->get('allow_origin') === false) {
             $this->output->set_header('Access-Control-Allow-Origin: '.((!empty($headers['Origin'])) ? $headers['Origin'] : $ip));
 
         // Autorise une ip
-        } else if (is_array($this->config('allow_origin')) && in_array($ip, $this->config('allow_origin'))) {
+        } elseif (is_array($this->config('allow_origin')) && in_array($ip, $this->config('allow_origin'))) {
             $this->output->set_header('Access-Control-Allow-Origin: '.$ip);
 
         // Autrement seulement un host
-        } else if (!empty($origin)) {
+        } elseif (!empty($origin)) {
             $this->output->set_header('Access-Control-Allow-Origin: '.$this->config('allow_origin'));
         }
     }
-
 }
