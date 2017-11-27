@@ -34,19 +34,19 @@ class Restserver
     protected $CI;
 
     /**
-     * Defines the CI instance
+     * Defines the Restserver Configuration
      * @var object
      */
     protected $config;
 
     /**
-     * Defines the CI instance
+     * Defines the Restserver Server
      * @var object
      */
     protected $server;
 
     /**
-     * Defines the CI instance
+     * Defines the Restserver Rules
      * @var object
      */
     protected $rules;
