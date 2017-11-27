@@ -1,18 +1,18 @@
 <?php
+namespace \Restserver\Input;
 
-class Limit
+class limit
 {
+    protected $value;
 
-const DIRECTION_ASC = 'ASC'
-
-
-    public $value;
-    
-    function __construct($value)
+    public function get()
     {
-        
+        return $this->value;
     }
     
-    public 
+    public function set($value)
+    {
+        $this->value = (int)$value;
+    }
 
 }
