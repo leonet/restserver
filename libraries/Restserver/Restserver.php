@@ -28,6 +28,8 @@ class Restserver
     protected $config;
     
     protected $server;
+    
+    protected $rules;
 
     /**
      * Class cosntructor
@@ -51,7 +53,8 @@ class Restserver
     public function initialize(array $config = array())
     {
         $this->config = new \Restserver\Core\Config($config);
-        $this->server = new \Restserver\Core\Server($this->config);
+        $this->server = new \Restserver\Core\Server();
+        $this->rules = new \Restserver\Core\Rules();
     }
 
     /**
@@ -66,12 +69,12 @@ class Restserver
 
     public function set_rules($rules)
     {
-        $this->input->setRules($rules);
+        $this->rules->set($rules);
     }
     
     public function input($key)
     {
-        return $this->input->getInput($rules);
+        return $this->input->getData($key);
     }
     
     public function alias()
