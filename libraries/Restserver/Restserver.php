@@ -24,20 +24,23 @@ class Restserver
 {
     // Defines the CI instance
     protected $CI;
-
+    
+    protected $config;
+    
+    protected $server;
 
     /**
      * Class cosntructor
      * @author Romain GALLIEN <romaingallien.rg@gmail.com>
      * @return array  $this  Class object
      */
-    public function __construct()
+    public function __construct(array $config = array())
     {
         // Gets the CI instance
         $this->CI =& get_instance();
 
         // Loads classes
-        $this->initialize();
+        $this->initialize($config);
     }
 
     /**
@@ -45,8 +48,10 @@ class Restserver
      * @author Romain GALLIEN <romaingallien.rg@gmail.com>
      * @return void
      */
-    public function initialize()
+    public function initialize(array $config = array())
     {
+        $this->config = new \Restserver\Core\Config($config);
+        $this->server = new \Restserver\Core\Server($this->config);
     }
 
     /**
@@ -54,13 +59,49 @@ class Restserver
      * @author Romain GALLIEN <romaingallien.rg@gmail.com>
      * @return [type] [description]
      */
-    public function run($call, $params)
+    public function run(&$controller, $call, $params)
     {
-        var_dump(new Restserver\Core\Server($this, $call, $params));
+        $this->server->run($controller, $call, $params);
     }
 
-    public function set_rules()
+    public function set_rules($rules)
     {
+        $this->input->setRules($rules);
+    }
+    
+    public function input($key)
+    {
+        return $this->input->getInput($rules);
+    }
+    
+    public function alias()
+    {
+        return $this->input->getAlias();
+    }
+    
+    public function post($key)
+    {
+        return $this->input->post();
+    }
+    
+     public function get()
+    {
+         return $this->input->get();
+    }
+    
+     public function put()
+    {
+         return $this->input->put();
+    }
+    
+     public function patch()
+    {
+         return $this->input->patch();
+    }
+    
+     public function delete()
+    {
+         return $this->input->delete();
     }
 }
 
