@@ -32,7 +32,7 @@ class Restserver
         'Output/Har',
         'Output/Response',
         // Defines System Log Classes
-        'Log/Modeld'
+        'Log/Model'
     );
 
     /**
