@@ -19,8 +19,6 @@ class Model
 
     protected $input;
 
-    protected $output;
-
     protected $httpcode;
 
     protected $exectime;

@@ -1,81 +1,87 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
- * ------------------------------------------------------
- *  Defines usefull constants
- * ------------------------------------------------------
- */
+// Defines usefull constants
 const RESTSERVER_VERSION = '3.0.0';
 const RESTSERVER_BASEPATH = __DIR__;
 
-// Defines Classes for loading
-static $_classes = array();
+class Restserver
+{
+    // Defines the CI instance
+    protected $CI;
 
-// Defines Restserver Classes to load
-$_core_classes = array(
-    // Defines System Core Classes
-    'Core/Config',
-    'Core/Server',
-    'Core/Rule',
-    'Core/Validation',
-    'Core/Input',
-    'Core/Output',
-    // Defines System Input Classes
-    'Input/Data',
-    'Input/Filter',
-    'Input/Limit',
-    'Input/Page',
-    'Input/Sorter',
-    'Input/Start',
-    // Defines System Output Classes
-    'Output/Cross',
-    'Output/Doc',
-    'Output/Har',
-    'Output/Response',
-    // Defines System Log Classes
-    'Log/Model'
-);
+    // Defines Restserver Classes to load
+    protected $_core_classes = array(
+        // Defines System Core Classes
+        'Core/Config',
+        'Core/Server',
+        'Core/Rule',
+        'Core/Validation',
+        'Core/Input',
+        'Core/Output',
+        // Defines System Input Classes
+        'Input/Data',
+        'Input/Filter',
+        'Input/Limit',
+        'Input/Page',
+        'Input/Sorter',
+        'Input/Start',
+        // Defines System Output Classes
+        'Output/Cross_domain',
+        'Output/Doc',
+        'Output/Har',
+        'Output/Response',
+        // Defines System Log Classes
+        'Log/Modeld'
+    );
 
-/*
- * ------------------------------------------------------
- *  Load the System Core Classes
- * ------------------------------------------------------
- */
-if (! empty($_core_classes)) {
-    foreach ($_core_classes as $class_path) {
-        if (file_exists(RESTSERVER_BASEPATH.'/'.$class_path.'.php')) {
-            // Require class path
-            require_once(RESTSERVER_BASEPATH.'/'.$class_path.'.php');
+    /**
+     * Class cosntructor
+     * @author Romain GALLIEN <romaingallien.rg@gmail.com>
+     * @return array  $this  Class object
+     */
+    public function __construct()
+    {
+        // Gets the CI instance
+        $this->CI =& get_instance();
 
-            // Define class name
-            $class_name = explode('/', $class_path)[1];
+        // Loads classes
+        $this->initialize();
 
-            var_dump(file_exists(RESTSERVER_BASEPATH.'/'.$class_path.'.php'));
-            var_dump(RESTSERVER_BASEPATH.'/'.$class_path.'.php');
+        var_dump($this);
+    }
 
-            // Load the class
-            $_classes[$class_name] = new $class_name();
-        } else {
-            // Returns Class loader error
-            http_response_code(503);
-            echo 'Unable to locate the specified class: '.$class_path.'.php';
-            exit(5);
+    /**
+     * Load every Restserver Classes
+     * @method initialize
+     * @author Romain GALLIEN <romaingallien.rg@gmail.com>
+     * @return void
+     */
+    public function initialize()
+    {
+        if (! empty($this->_core_classes)) {
+            foreach ($this->_core_classes as $class_path) {
+                if (file_exists(RESTSERVER_BASEPATH.'/'.$class_path.'.php')) {
+                    // Require class path
+                    require_once(RESTSERVER_BASEPATH.'/'.$class_path.'.php');
+                } else {
+                    // Define class name
+                    $class_name = explode('/', $class_path);
+
+                    // Returns Class loader error
+                    show_error('Unable to locate the specified class: '.$class_name[1].'.php', 503, 'Restserver '.RESTSERVER_VERSION.' Error');
+                }
+            }
         }
     }
 
-    // Returns Restserver Instance
-    return $_classes[$class_name];
+    public function run()
+    {
+    }
+    public function set_rules()
+    {
+    }
 }
 
-var_dump($_classes);
-
-
-/*
- * ------------------------------------------------------
- *  Load the System Log Classe
- * ------------------------------------------------------
- */
-if (file_exists(RESTSERVER_BASEPATH.'/Log/Model.php')) {
-    require_once(RESTSERVER_BASEPATH.'/Log/Model.php');
-}
+/* End of file Restserver.php */
+/* Location: ./Restserver/Restserver.php */
