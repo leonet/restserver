@@ -1,30 +1,32 @@
 <?php
 namespace \Restserver\Log;
 
+defined('BASEPATH') or exit ('No direct script access allowed');
+
 class Model
 {
     protected $method = null;
-    
+
     protected $url;
-    
+
     protected $ip;
-    
+
     protected $auth;
-    
+
     protected $output;
-    
+
     protected $headers;
-    
+
     protected $input;
-    
+
     protected $output;
-    
+
     protected $httpcode;
-    
+
     protected $exectime;
-    
+
     protected $dateinsert;
-    
+
     /**
      * Constructeur
      * @param array $config
@@ -35,7 +37,7 @@ class Model
             $this->{$config_key} = $config_value;
         }
     }
-    
+
     /**
      * Envoi une réponse au client
      * @param mixed $data
@@ -77,8 +79,8 @@ class Model
 
         // Encode le data
         $this->CI->output->set_output((!empty($json)) ? $json : $data);
-        
-        
+
+
 
         // Si le journal est activé
         if ($this->config['log']) {
@@ -91,7 +93,7 @@ class Model
             $log_model->url    = (!empty($this->url)) ? $this->url : null;
             $log_model->ip     = (!empty($this->ip)) ? $this->ip : null;
             $log_model->auth   = ($this->auth) ? 1 : 0;
-            
+
             if ($this->config['log_extra']) {
                 $this->output = $this->CI->output->get_output();
 
@@ -108,5 +110,7 @@ class Model
             $this->_set_log($log_model);
         }
     }
-
 }
+
+/* End of file Model.php */
+/* Location: ./Restserver/Log/Model.php */

@@ -1,7 +1,7 @@
 <?php
-defined('BASEPATH') or exit ('No direct script access allowed');
+namespace \Restserver\Core;
 
-namespace \Restserver\Core\Config;
+defined('BASEPATH') or exit ('No direct script access allowed');
 
 class Config
 {
@@ -36,10 +36,10 @@ class Config
 
     /**
      * Class cosntructor
-     * @author Romain GALLIEN <r.gallien@santiane.fr>
+     * @author Romain GALLIEN <romaingallien.rg@gmail.com>
      * @return array  $this  Class object
      */
-    public function construct(array $config = array())
+    public function construct(array &$config = array())
     {
         // Gets the CI instance
         $this->CI =& get_instance();
@@ -50,7 +50,7 @@ class Config
 
     /**
      * Initialize config parameters
-     * @author Romain GALLIEN <r.gallien@santiane.fr>
+     * @author Romain GALLIEN <romaingallien.rg@gmail.com>
      * @param  array  $config Personal config vars
      * @return array         [description]
      */
@@ -66,7 +66,7 @@ class Config
 
     /**
      * Returns Restserver configuration
-     * @author Romain GALLIEN <r.gallien@santiane.fr>
+     * @author Romain GALLIEN <romaingallien.rg@gmail.com>
      * @return array  $this  Restserver Configuration
      */
     public function getInstance()
@@ -77,7 +77,7 @@ class Config
 
     /**
      * Returns Restserver configuration value by key
-     * @author Romain GALLIEN <r.gallien@santiane.fr>
+     * @author Romain GALLIEN <romaingallien.rg@gmail.com>
      * @return array  $this  Restserver Configuration
      */
     public function get($config_key = null)

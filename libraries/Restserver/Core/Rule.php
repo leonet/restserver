@@ -1,9 +1,9 @@
 <?php
-namespace \Restserver\Input;
+namespace \Restserver\Core;
 
 defined('BASEPATH') or exit ('No direct script access allowed');
 
-class Data
+class Rule
 {
     protected $CI;
 
@@ -17,5 +17,5 @@ class Data
     }
 }
 
-/* End of file Data.php */
-/* Location: ./Restserver/Input/Data.php */
+/* End of file Server.php */
+/* Location: ./Restserver/Core/Server.php */

@@ -1,6 +1,8 @@
 <?php
 namespace \Restserver\Output;
 
+defined('BASEPATH') or exit ('No direct script access allowed');
+
 class Response
 {
     protected $log;
@@ -8,10 +10,10 @@ class Response
     function __construct(\Restserver\Log\Model $log)
     {
         $this->CI =& get_instance();
-        
+
         $this->log =& $log;
     }
-    
+
     /**
      * Envoi une réponse au client
      * @param mixed $data
@@ -53,8 +55,8 @@ class Response
 
         // Encode le data
         $this->CI->output->set_output((!empty($json)) ? $json : $data);
-        
-        
+
+
 
         // Si le journal est activé
         if ($this->config['log']) {
@@ -67,7 +69,7 @@ class Response
             $log_model->url    = (!empty($this->url)) ? $this->url : null;
             $log_model->ip     = (!empty($this->ip)) ? $this->ip : null;
             $log_model->auth   = ($this->auth) ? 1 : 0;
-            
+
             if ($this->config['log_extra']) {
                 $this->output = $this->CI->output->get_output();
 
@@ -84,5 +86,7 @@ class Response
             $this->_set_log($log_model);
         }
     }
-
 }
+
+/* End of file Response.php */
+/* Location: ./Restserver/Output/Response.php */

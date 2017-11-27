@@ -3,10 +3,9 @@ namespace \Restserver\Input;
 
 defined('BASEPATH') or exit ('No direct script access allowed');
 
-class Page
+class Filter
 {
     protected $CI;
-    protected $value;
 
     /**
      * Class Constructor
@@ -16,17 +15,7 @@ class Page
     {
         $this->CI =& get_instance();
     }
-
-    public function get()
-    {
-        return $this->value;
-    }
-
-    public function set($value)
-    {
-        $this->value = (int) $value;
-    }
 }
 
-/* End of file Page.php */
-/* Location: ./Restserver/Input/Page.php */
+/* End of file Filter.php */
+/* Location: ./Restserver/Input/Filter.php */

@@ -1,11 +1,13 @@
 <?php
-namespace Restserver\Core;
+namespace \Restserver\Core;
+
+defined('BASEPATH') or exit ('No direct script access allowed');
 
 class Input
 {
     protected $CI;
 
-    function __construct()
+    public function __construct()
     {
         $this->CI =& get_instance();
         $this->CI->load->library('url');
@@ -104,3 +106,6 @@ class Input
         );
     }
 }
+
+/* End of file Input.php */
+/* Location: ./Restserver/Core/Input.php */

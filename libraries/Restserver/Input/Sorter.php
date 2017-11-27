@@ -3,7 +3,7 @@ namespace \Restserver\Input;
 
 defined('BASEPATH') or exit ('No direct script access allowed');
 
-class Page
+class Sorter
 {
     protected $CI;
     protected $value;
@@ -28,5 +28,5 @@ class Page
     }
 }
 
-/* End of file Page.php */
-/* Location: ./Restserver/Input/Page.php */
+/* End of file Sorter.php */
+/* Location: ./Restserver/Input/Sorter.php */
