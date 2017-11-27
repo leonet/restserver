@@ -4,13 +4,13 @@ namespace Restserver\Core;
 class Input
 {
     protected $CI;
-            
+
     function __construct()
     {
         $this->CI =& get_instance();
         $this->CI->load->library('url');
     }
-    
+
     /**
      * Retourne la méthode
      * @return string la méthode
@@ -20,7 +20,7 @@ class Input
         $method = $this->CI->input->server('REQUEST_METHOD');
         return (!empty($method)) ? strtolower($method) : '';
     }
-    
+
     /**
      * Retourne l'URL
      * @return string
@@ -30,7 +30,7 @@ class Input
         $url = current_url();
         return (!empty($url)) ? $url : '';
     }
-    
+
     /**
      * Retourne l'adresse IP
      * @return string
@@ -40,7 +40,7 @@ class Input
         $ip = $this->CI->input->ip_address();
         return (!empty($ip)) ? $ip : '';
     }
-    
+
     /**
      * Retourne la liste des en-têtes
      * @return array
@@ -50,7 +50,7 @@ class Input
         $headers = $this->CI->input->request_headers(true);
         return (!empty($headers)) ? $headers : array();
     }
-    
+
     /**
      * Retourne toutes les données entrantes
      * @return array
@@ -64,7 +64,7 @@ class Input
         $patch  = null;
         $delete = null;
 
-        switch (method) {
+        switch ($method) {
             case 'get':
                 $_get = $this->CI->input->get();
                 $_uri = $this->CI->uri->ruri_to_assoc();
