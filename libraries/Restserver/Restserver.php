@@ -47,13 +47,10 @@ class Restserver
 
         // Loads classes
         $this->initialize();
-
-        var_dump($this);
     }
 
     /**
      * Load every Restserver Classes
-     * @method initialize
      * @author Romain GALLIEN <romaingallien.rg@gmail.com>
      * @return void
      */
@@ -75,9 +72,16 @@ class Restserver
         }
     }
 
-    public function run()
+    /**
+     * Run RestServer
+     * @author Romain GALLIEN <romaingallien.rg@gmail.com>
+     * @return [type] [description]
+     */
+    public function run($call, $params)
     {
+        var_dump(new Restserver\Core\Server($this, $call, $params));
     }
+
     public function set_rules()
     {
     }
