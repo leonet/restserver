@@ -1,6 +1,7 @@
 <?php
+namespace Restserver\Output;
 
-namespace \Restserver\Output;
+defined('BASEPATH') or exit ('No direct script access allowed');
 
 class Cross_domain
 {

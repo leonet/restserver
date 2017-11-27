@@ -1,5 +1,5 @@
 <?php
-namespace \Restserver\Input;
+namespace Restserver\Input;
 
 defined('BASEPATH') or exit ('No direct script access allowed');
 

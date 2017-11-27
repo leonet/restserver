@@ -1,5 +1,5 @@
 <?php
-namespace \Restserver\Output;
+namespace Restserver\Log\Drivers;
 
 defined('BASEPATH') or exit ('No direct script access allowed');
 

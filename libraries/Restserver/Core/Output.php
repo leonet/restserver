@@ -1,5 +1,5 @@
 <?php
-namespace \Restserver\Core;
+namespace Restserver\Core;
 
 defined('BASEPATH') or exit ('No direct script access allowed');
 

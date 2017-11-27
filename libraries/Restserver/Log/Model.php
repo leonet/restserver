@@ -1,5 +1,5 @@
 <?php
-namespace \Restserver\Log;
+namespace Restserver\Log;
 
 defined('BASEPATH') or exit ('No direct script access allowed');
 
