@@ -2,23 +2,23 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 // Defines classes
-require(__DIR__.'/Core/Config');
-require(__DIR__.'/Core/Server');
-require(__DIR__.'/Core/Rule');
-require(__DIR__.'/Core/Validation');
-require(__DIR__.'/Core/Input');
-require(__DIR__.'/Core/Output');
-require(__DIR__.'/Input/Data');
-require(__DIR__.'/Input/Filter');
-require(__DIR__.'/Input/Limit');
-require(__DIR__.'/Input/Page');
-require(__DIR__.'/Input/Sorter');
-require(__DIR__.'/Input/Start');
-require(__DIR__.'/Output/Cross_domain');
-require(__DIR__.'/Output/Doc');
-require(__DIR__.'/Output/Har');
-require(__DIR__.'/Output/Response');
-require(__DIR__.'/Log/Mode');
+require(__DIR__.'/Core/Config.php');
+require(__DIR__.'/Core/Server.php');
+require(__DIR__.'/Core/Rule.php');
+require(__DIR__.'/Core/Validation.php');
+require(__DIR__.'/Core/Input.php');
+require(__DIR__.'/Core/Output.php');
+require(__DIR__.'/Input/Data.php');
+require(__DIR__.'/Input/Filter.php');
+require(__DIR__.'/Input/Limit.php');
+require(__DIR__.'/Input/Page.php');
+require(__DIR__.'/Input/Sorter.php');
+require(__DIR__.'/Input/Start.php');
+require(__DIR__.'/Output/Cross_domain.php');
+require(__DIR__.'/Output/Doc.php');
+require(__DIR__.'/Output/Har.php');
+require(__DIR__.'/Output/Response.php');
+require(__DIR__.'/Log/Model.php');
 
 class Restserver
 {
