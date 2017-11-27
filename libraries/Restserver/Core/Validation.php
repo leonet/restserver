@@ -21,12 +21,12 @@ class Validation
         $this->response =& $response;
     }
 
-    public function setData(\Restserver\Input\Data $data)
+    public function setData(\Restserver\Input\Data &$data)
     {
         $this->data = $data;
     }
 
-    public function setRules(\Restserver\Input\Rules $rules)
+    public function setRules(\Restserver\Input\Rules &$rules)
     {
         $this->rules = $rules;
     }

@@ -52,6 +52,15 @@ class Input
         $headers = $this->CI->input->request_headers(true);
         return (!empty($headers)) ? $headers : array();
     }
+    
+    /**
+     * Si le protocol est de type HTTPS
+     * @return boolean
+     */
+    public function is_ssl()
+    {
+        return ($this->CI->input->server('HTTPS') == 'on');
+    }
 
     /**
      * Retourne toutes les données entrantes
@@ -105,6 +114,7 @@ class Input
             'delete' => (is_array($delete)) ? $delete : array()
         );
     }
+    
 }
 
 /* End of file Input.php */

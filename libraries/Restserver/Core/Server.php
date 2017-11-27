@@ -22,6 +22,7 @@ class Server
 
     public function initialize()
     {
+        
     }
 
 
@@ -31,47 +32,52 @@ class Server
         $this->cross_domain->run();
 
         // Si la requête est de type options (cross domain)
-        if ($this->method === 'options') {
-            $this->response(array(
+        if ($this->input->method() === 'options') {
+            $this->response(array_merge($this->output->get_protocol(), array(
                 'status' => true
-            ), 200);
+            )), 200);
 
             return true;
         }
 
         // Si le protocole SSL est obligatoire
-        if ($this->config['force_https'] && !$this->_is_sslprotocol()) {
-            $this->response(array(
+        if ($this->config->get('force_https') && !$this->input->is_ssl()) {
+            $this->response(array_merge($this->output->get_protocol(), array(
                 'status' => false,
                 'error'  => 'Unsupported protocol'
-            ), 403);
+            )), 403);
 
             return false;
         }
 
         // Si la requête est en ajax
-        if ($this->config['ajax_only'] && !$this->CI->input->is_ajax_request()) {
-            $this->response(array(
+        if ($this->config->get('ajax_only') && !$this->CI->input->is_ajax_request()) {
+            $this->response(array_merge($this->output->get_protocol(), array(
                 'status' => false,
                 'error'  => 'Only AJAX requests are accepted'
-            ), 505);
+            )), 505);
 
             return false;
         }
 
         // Authentification
-        if ($this->config['auth_http']) {
-            if (!$this->auth = $this->_authentication()) {
+        if ($this->config->get('auth_http')) {
+            if (!$this->authentication($controller)) {
+                $this->response(array_merge($this->output->get_protocol(), array(
+                    'status' => false,
+                    'error'  => 'Forbidden'
+                )), 403);
+                
                 return false;
             }
         }
 
         // Si la méthode existe
-        if (!method_exists($this->controller, $this->method)) {
-            $this->response(array(
+        if (!method_exists($controller, $this->input->method())) {
+            $this->response(array_merge($this->output->get_protocol(), array(
                 'status' => false,
                 'error'  => 'Method not found'
-            ), 405);
+            )), 405);
 
             return false;
         }
@@ -140,6 +146,22 @@ class Server
 
         return true;
     }
+    
+    /**
+     * Appelle une méthode d'autentificiation, si elle existe
+     * @param \CI_Controller $controller
+     * @return boolean
+     */
+    protected function _authentication(\CI_Controller &$controller)
+    {
+        // Si l'autentification par HTTP est activé et qu'il existe une surcharge
+        if (method_exists($controller, '_auth')) {
+            return call_user_func_array(array($controller, '_auth'), array());
+        }
+
+        return true;
+    }
+    
 }
 
 /* End of file Server.php */

@@ -24,6 +24,11 @@ class Output
             $this->CI->output->set_header($value);
         }
     }
+    
+    public function get_protocol()
+    {
+        return restserver_protocol();
+    }
 }
 
 /* End of file Output.php */
