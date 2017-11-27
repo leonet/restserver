@@ -7,7 +7,7 @@ class Doc
 {
     protected $doc = array();
 
-    public function __construct(\Restserver\Core\Rules $rules)
+    public function __construct(\Restserver\Manager\Rules $rules)
     {
         // Si le tableau des champs n'est pas vide
         if (!empty($rules)) {

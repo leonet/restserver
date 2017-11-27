@@ -16,7 +16,7 @@ require(__DIR__.'/Input/Limit.php');
 require(__DIR__.'/Input/Page.php');
 require(__DIR__.'/Input/Sorter.php');
 require(__DIR__.'/Input/Start.php');
-require(__DIR__.'/Output/Cross_domain.php');
+require(__DIR__.'/Output/Cross.php');
 require(__DIR__.'/Output/Doc.php');
 require(__DIR__.'/Output/Har.php');
 require(__DIR__.'/Output/Response.php');
@@ -81,9 +81,9 @@ class Restserver
     public function initialize(array $config = array())
     {
         $this->config = new \Restserver\Core\Config($config);
-        $this->rules = new \Restserver\Core\Rules();
-        $this->input = new \Restserver\Core\Input();
         $this->server = new \Restserver\Core\Server();
+        $this->input = new \Restserver\Manager\Input();
+        $this->rules = new \Restserver\Manager\Rules();
     }
 
     /**

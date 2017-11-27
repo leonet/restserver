@@ -6,33 +6,20 @@ defined('BASEPATH') or exit ('No direct script access allowed');
 class Server
 {
     public $config;
-    public $cross_domain;
-    public $input;
-    public $output;
-    protected $CI;
-
-    /**
-     * Class Constructor
-     * @author Romain GALLIEN <romaingallien.rg@gmail.com>
-     */
-    public function __construct()
-    {
-        $this->CI =& get_instance();
-    }
-
-    public function initialize()
-    {
         
-    }
-
+    public $input;
+    
+    public $output;
+    
     public function run(Restserver_Controller &$controller, $call, $params)
     {
         // Envoi les autorisations pour le cross-domain
-        $this->cross_domain->run();
+        $cross = new \Restserver\Output\Cross($this->config, $this->input, $this->output);
+        $cross->run();
 
         // Si la requête est de type options (cross domain)
-        if ($this->input->method() === 'options') {
-            $this->output->response(array_merge($this->output->get_protocol(), array(
+        if ($this->input->getMethod() === 'options') {
+            $this->output->setResponse(array_merge($this->output->getProtocol(), array(
                 'status' => true
             )), 200);
 
@@ -40,8 +27,8 @@ class Server
         }
 
         // Si le protocole SSL est obligatoire
-        if ($this->config->get('force_https') && !$this->input->is_ssl()) {
-            $this->output->response(array_merge($this->output->get_protocol(), array(
+        if ($this->config->get('force_https') && !$this->input->isSsl()) {
+            $this->output->setResponse(array_merge($this->output->getProtocol(), array(
                 'status' => false,
                 'error'  => 'Unsupported protocol'
             )), 403);
@@ -50,8 +37,8 @@ class Server
         }
 
         // Si la requête est en ajax
-        if ($this->config->get('ajax_only') && !$this->CI->input->is_ajax_request()) {
-            $this->response(array_merge($this->output->get_protocol(), array(
+        if ($this->config->get('ajax_only') && !$this->input->is_ajax_request()) {
+            $this->setResponse(array_merge($this->output->getProtocol(), array(
                 'status' => false,
                 'error'  => 'Only AJAX requests are accepted'
             )), 505);
@@ -62,7 +49,7 @@ class Server
         // Authentification
         if ($this->config->get('auth_http')) {
             if (!$this->authentication($controller)) {
-                $this->output->response(array_merge($this->output->get_protocol(), array(
+                $this->output->setResponse(array_merge($this->output->getProtocol(), array(
                     'status' => false,
                     'error'  => 'Forbidden'
                 )), 403);
@@ -72,73 +59,64 @@ class Server
         }
 
         // Si la méthode existe
-        if (!method_exists($controller, $this->input->method())) {
-            $this->output->response(array_merge($this->output->get_protocol(), array(
+        if (!method_exists($controller, $this->input->getMethod())) {
+            $this->output->setResponse(array_merge($this->output->getProtocol(), array(
                 'status' => false,
                 'error'  => 'Method not found'
             )), 405);
 
             return false;
         }
+        
+        // Récupération des data
+        $data = $this->input->getData();
 
-        // Si la documentation est demandé
-        if (isset($this->input['get']['help'])) {
+        // Si la documentation est demandée
+        if ($this->input->get('help')) {
+            $help = new \Restserver\Output\Help();
+            
             // Récupère les fields pour la documentation
-            $doc = $this->output->doc()->get();
-
+            $comments = $help->get();
+            
             // Si il existe une docuementation
-            if (!empty($doc)) {
-                $this->output->response(array(
+            if (!empty($comments)) {
+                $this->output->setResponse(array_merge($this->output->getProtocol(), array(
                     'status' => true,
-                    'value'  => $doc
-                ), 200);
+                    'value'  => $comments
+                )), 200);
 
                 return true;
             }
         }
 
         // Si la documentation HAR est demandée (http://www.softwareishard.com/blog/har-12-spec/#request)
-        if (isset($this->input['get']['har']) && $har = $this->input['get']['har']) {
+        if ($this->input->get('har')) {
+            $har = new \Restserver\Output\Har();
+            
             // Récupère les fields pour la documentation
-            $doc = $this->_get_doc_har($har);
+            $documentation = $har->get();
 
             // Si il existe une docuementation
-            if (!empty($doc)) {
-                $this->output->response($doc, 200);
+            if (!empty($documentation)) {
+                $this->output->setResponse($documentation, 200);
 
                 return true;
             }
         }
-
-        // Récupère les règles
-        $rules = $this->_get_rules();
-
-        // Si des règles existent
-        if (!empty($rules)) {
-            // Vérification des données entrantes
-            $this->CI->form_validation->set_data($this->input[$this->method]);
-            $this->CI->form_validation->set_rules($rules);
-            $this->CI->form_validation->set_error_delimiters('', '');
-
-            // Si le validateur a rencontré une ou plusieurs erreurs
-            if ($this->CI->form_validation->run() === false) {
-                exit('fdfsfsdfsd');
-                $errors = $this->CI->form_validation->error_array();
-
-                $this->output->response(array(
-                    'status' => false,
-                    'error'  => (!empty($errors)) ? $errors : 'Unsupported data validation'
-                ), 400);
-
-                return false;
-            }
+        
+        // Validation des donées
+        $validation = new \Restserver\Core\Validation($this->response);
+        
+        // Définition du data
+        $validation->setData($data);
+        
+        // Définition des règles
+        $validation->setRules($this->fields->getRules());
+        
+        // Lance la validation
+        if ($validation->run() === false) {
+            return false;
         }
-
-        // Création des input
-        //$this->field_input = $this->_get_field_input();
-
-        // Création des alias
-        //$this->alias = $this->_get_alias();
 
         // Exécute la méthode
         call_user_func_array(array($controller, $method), $params);

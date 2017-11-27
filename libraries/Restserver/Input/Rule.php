@@ -1,4 +1,6 @@
 <?php
+namespace Restserver\Core;
+
 /**
  * REST Full server for Codeigniter 3
  * 
@@ -14,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /** 
  * Restserver (Librairie REST Serveur)
  */
-class Restserver_rule
+class Rule
 {
     const TYPE_INPUT  = 'input';
     
@@ -129,18 +131,21 @@ class Restserver_rule
         );
     }
     
-    public function get_field()
+    public function get()
     {
-        return array(
-            'field'   => $this->field,
-            'type'    => $this->type,
-            'alias'   => $this->alias,
-            'label'   => $this->label,
-            'rules'   => $this->rules,
-            'errors'  => $this->errors,
-            'comment' => $this->comment
-        );
+        return get_object_vars($this);
     }
+    
+    public function getField()
+    {
+        return $this->field;
+    }
+    
+    public function getComment()
+    {
+        return $this->comment;
+    }
+    
 }
 
 /* End of file Restserver_rule.php */

@@ -17,8 +17,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 interface Restserver_interface
 {
     public function post();
+    
     public function get();
+    
     public function put();
+    
     public function delete();
 }
 

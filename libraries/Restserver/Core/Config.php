@@ -15,34 +15,49 @@ class Config
      * Restserver configuration
      */
     protected $allow_methods = array('GET', 'POST', 'PUT', 'DELETE');
+    
     protected $allow_headers = array('X-RestServer');
+    
     protected $allow_credentials = false;
+    
     protected $allow_origin = false;
+    
     protected $force_https = false;
+    
     protected $ajax_only = false;
+    
     protected $auth_http = false;
+    
     protected $cache = false;
+    
     protected $debug = false;
+    
     protected $log = false;
+    
     protected $log_driver = 'file';
+    
     protected $log_db_name = 'rest';
+    
     protected $log_db_table = 'log';
+    
     protected $log_file_path = '';
+    
     protected $log_file_name = 'rest.log';
-    protected $log_extra = fals;
+    
+    protected $log_extra = false;
 
     /**
      * Class cosntructor
      * @author Romain GALLIEN <romaingallien.rg@gmail.com>
      * @return array  $this  Class object
      */
-    public function construct(array &$config = array())
+    public function construct(array $config = array())
     {
         // Gets the CI instance
         $this->CI =& get_instance();
 
         // If any configuration data was sent to the class constructor
-        empty($config) or $this->initialize($config);
+        $this->initialize($config);
     }
 
     /**
@@ -56,7 +71,9 @@ class Config
         // Append configuration to Config object
         if (!empty($config)) {
             foreach ($config as $config_key => $config_value) {
-                (!property_exists($this, $config_key)) or $this->$config_key = $config_value;
+                if (isset($this->$config_key)) {
+                    $this->$config_key = $config_value;
+                }
             }
         }
     }
@@ -68,7 +85,6 @@ class Config
      */
     public function getInstance()
     {
-        // Return
         return $this;
     }
 

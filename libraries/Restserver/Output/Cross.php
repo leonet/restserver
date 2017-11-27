@@ -3,7 +3,7 @@ namespace Restserver\Output;
 
 defined('BASEPATH') or exit ('No direct script access allowed');
 
-class Cross_domain
+class Cross
 {
     protected $config;
     protected $output;

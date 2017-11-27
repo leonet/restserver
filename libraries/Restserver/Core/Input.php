@@ -17,7 +17,7 @@ class Input
      * Retourne la méthode
      * @return string la méthode
      */
-    public function method()
+    public function getMethod()
     {
         $method = $this->CI->input->server('REQUEST_METHOD');
         return (!empty($method)) ? strtolower($method) : '';
@@ -27,7 +27,7 @@ class Input
      * Retourne l'URL
      * @return string
      */
-    public function url()
+    public function getUrl()
     {
         $url = current_url();
         return (!empty($url)) ? $url : '';
@@ -37,7 +37,7 @@ class Input
      * Retourne l'adresse IP
      * @return string
      */
-    public function ip()
+    public function getIp()
     {
         $ip = $this->CI->input->ip_address();
         return (!empty($ip)) ? $ip : '';
@@ -47,7 +47,7 @@ class Input
      * Retourne la liste des en-têtes
      * @return array
      */
-    public function headers()
+    public function getHeaders()
     {
         $headers = $this->CI->input->request_headers(true);
         return (!empty($headers)) ? $headers : array();
@@ -57,18 +57,23 @@ class Input
      * Si le protocol est de type HTTPS
      * @return boolean
      */
-    public function is_ssl()
+    public function isSsl()
     {
         return ($this->CI->input->server('HTTPS') == 'on');
+    }
+    
+    public function isAjaxRequest()
+    {
+        return $this->CI->input->is_ajax_request();
     }
 
     /**
      * Retourne toutes les données entrantes
      * @return array
      */
-    private function data()
+    private function getData()
     {
-        $method = $this->method();
+        $method = $this->getMethod();
         $get    = null;
         $post   = null;
         $put    = null;
