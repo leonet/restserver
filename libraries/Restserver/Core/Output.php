@@ -7,14 +7,17 @@ class Output
 {
     protected $CI;
     protected $config;
+    protected $fields;
 
-    function __construct(\Restserver\Core\Config $config)
+    function __construct(\Restserver\Core\Config $config, \Restserver\Core\Rules $rules)
     {
         $this->CI =& get_instance();
-        $this->config =& $config->getInstance();
+        $this->config =& $config;
+        $this->rules =& $rules;
+        
     }
 
-    public function set_header($value)
+    public function setHeader($value)
     {
         // Si le mode débug est activé, utilise le header natif
         if ($this->config->get('debug')) {
@@ -25,9 +28,14 @@ class Output
         }
     }
     
-    public function get_protocol()
+    public function getProtocol()
     {
         return restserver_protocol();
+    }
+    
+    public function doc()
+    {
+        return new \Restserver\Output\Doc($this->rules);
     }
 }
 

@@ -25,7 +25,6 @@ class Server
         
     }
 
-
     public function run(Restserver_Controller &$controller, $call, $params)
     {
         // Envoi les autorisations pour le cross-domain
@@ -33,7 +32,7 @@ class Server
 
         // Si la requête est de type options (cross domain)
         if ($this->input->method() === 'options') {
-            $this->response(array_merge($this->output->get_protocol(), array(
+            $this->output->response(array_merge($this->output->get_protocol(), array(
                 'status' => true
             )), 200);
 
@@ -42,7 +41,7 @@ class Server
 
         // Si le protocole SSL est obligatoire
         if ($this->config->get('force_https') && !$this->input->is_ssl()) {
-            $this->response(array_merge($this->output->get_protocol(), array(
+            $this->output->response(array_merge($this->output->get_protocol(), array(
                 'status' => false,
                 'error'  => 'Unsupported protocol'
             )), 403);
@@ -63,7 +62,7 @@ class Server
         // Authentification
         if ($this->config->get('auth_http')) {
             if (!$this->authentication($controller)) {
-                $this->response(array_merge($this->output->get_protocol(), array(
+                $this->output->response(array_merge($this->output->get_protocol(), array(
                     'status' => false,
                     'error'  => 'Forbidden'
                 )), 403);
@@ -74,7 +73,7 @@ class Server
 
         // Si la méthode existe
         if (!method_exists($controller, $this->input->method())) {
-            $this->response(array_merge($this->output->get_protocol(), array(
+            $this->output->response(array_merge($this->output->get_protocol(), array(
                 'status' => false,
                 'error'  => 'Method not found'
             )), 405);
@@ -85,13 +84,13 @@ class Server
         // Si la documentation est demandé
         if (isset($this->input['get']['help'])) {
             // Récupère les fields pour la documentation
-            $docs = $this->_get_docs();
+            $doc = $this->output->doc()->get();
 
             // Si il existe une docuementation
-            if (!empty($docs)) {
-                $this->response(array(
+            if (!empty($doc)) {
+                $this->output->response(array(
                     'status' => true,
-                    'value'  => $docs
+                    'value'  => $doc
                 ), 200);
 
                 return true;
@@ -105,7 +104,7 @@ class Server
 
             // Si il existe une docuementation
             if (!empty($doc)) {
-                $this->response($doc, 200);
+                $this->output->response($doc, 200);
 
                 return true;
             }
@@ -126,7 +125,7 @@ class Server
                 exit('fdfsfsdfsd');
                 $errors = $this->CI->form_validation->error_array();
 
-                $this->response(array(
+                $this->output->response(array(
                     'status' => false,
                     'error'  => (!empty($errors)) ? $errors : 'Unsupported data validation'
                 ), 400);
@@ -152,7 +151,7 @@ class Server
      * @param \CI_Controller $controller
      * @return boolean
      */
-    protected function _authentication(\CI_Controller &$controller)
+    protected function authentication(\CI_Controller &$controller)
     {
         // Si l'autentification par HTTP est activé et qu'il existe une surcharge
         if (method_exists($controller, '_auth')) {
