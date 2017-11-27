@@ -52,6 +52,12 @@ class Restserver
     protected $rules;
 
     /**
+     * Defines the Restserver Input
+     * @var object
+     */
+    protected $input;
+
+    /**
      * Class constructor
      * @author Yoann VANITOU <y.vanitou@santiane.fr>
      * @author Romain GALLIEN <romaingallien.rg@gmail.com>
@@ -77,6 +83,7 @@ class Restserver
         $this->config = new \Restserver\Core\Config($config);
         $this->server = new \Restserver\Core\Server();
         $this->rules = new \Restserver\Core\Rules();
+        $this->input = new \Restserver\Core\Input();
     }
 
     /**
