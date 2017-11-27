@@ -1,7 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-// Defines classes
+/**
+ * Defines System Classes to load
+ */
 require(__DIR__.'/Core/Config.php');
 require(__DIR__.'/Core/Server.php');
 require(__DIR__.'/Core/Rule.php');
@@ -20,33 +22,53 @@ require(__DIR__.'/Output/Har.php');
 require(__DIR__.'/Output/Response.php');
 require(__DIR__.'/Log/Model.php');
 
+/**
+ * RestServer Class
+ */
 class Restserver
 {
-    // Defines the CI instance
+    /**
+     * Defines the CI instance
+     * @var object
+     */
     protected $CI;
-    
+
+    /**
+     * Defines the CI instance
+     * @var object
+     */
     protected $config;
-    
+
+    /**
+     * Defines the CI instance
+     * @var object
+     */
     protected $server;
-    
+
+    /**
+     * Defines the CI instance
+     * @var object
+     */
     protected $rules;
 
     /**
-     * Class cosntructor
+     * Class constructor
+     * @author Yoann VANITOU <y.vanitou@santiane.fr>
      * @author Romain GALLIEN <romaingallien.rg@gmail.com>
-     * @return array  $this  Class object
+     * @return void
      */
     public function __construct(array $config = array())
     {
         // Gets the CI instance
         $this->CI =& get_instance();
 
-        // Loads classes
+        // Init classes
         $this->initialize($config);
     }
 
     /**
-     * Load every Restserver Classes
+     * Instantiate every Restserver System Classes
+     * @author Yoann VANITOU <y.vanitou@santiane.fr>
      * @author Romain GALLIEN <romaingallien.rg@gmail.com>
      * @return void
      */
@@ -58,53 +80,96 @@ class Restserver
     }
 
     /**
-     * Run RestServer
+     * Run Restserver
+     * @author Yoann VANITOU <y.vanitou@santiane.fr>
      * @author Romain GALLIEN <romaingallien.rg@gmail.com>
-     * @return [type] [description]
+     * @return void
      */
     public function run(&$controller, $call, $params)
     {
         $this->server->run($controller, $call, $params);
     }
 
+    /**
+     * Set the Restserver rules
+     * @author Yoann VANITOU <y.vanitou@santiane.fr>
+     * @param  array    $rules Array of rules
+     * @return void
+     */
     public function set_rules($rules)
     {
         $this->rules->set($rules);
     }
-    
+
+    /**
+     * Set the Input
+     * @author Yoann VANITOU <y.vanitou@santiane.fr>
+     * @param  array    $key
+     * @return \Restserver\Core\Input
+     */
     public function input($key)
     {
         return $this->input->getData($key);
     }
-    
+
+    /**
+     * Set the Aliases
+     * @author Yoann VANITOU <y.vanitou@santiane.fr>
+     * @return \Restserver\Core\Input
+     */
     public function alias()
     {
         return $this->input->getAlias();
     }
-    
+
+    /**
+     * Input POST Protocol
+     * @author Yoann VANITOU <y.vanitou@santiane.fr>
+     * @return \Restserver\Core\Input
+     */
     public function post($key)
     {
         return $this->input->post();
     }
-    
-     public function get()
+
+    /**
+     * Input GET Protocol
+     * @author Yoann VANITOU <y.vanitou@santiane.fr>
+     * @return \Restserver\Core\Input
+     */
+    public function get()
     {
-         return $this->input->get();
+        return $this->input->get();
     }
-    
-     public function put()
+
+    /**
+     * Input PUT Protocol
+     * @author Yoann VANITOU <y.vanitou@santiane.fr>
+     * @return \Restserver\Core\Input
+     */
+    public function put()
     {
-         return $this->input->put();
+        return $this->input->put();
     }
-    
-     public function patch()
+
+    /**
+     * Input PATCH Protocol
+     * @author Yoann VANITOU <y.vanitou@santiane.fr>
+     * @return \Restserver\Core\Input
+     */
+    public function patch()
     {
-         return $this->input->patch();
+        return $this->input->patch();
     }
-    
-     public function delete()
+
+    /**
+     * Input DELETE Protocol
+     * @author Yoann VANITOU <y.vanitou@santiane.fr>
+     * @return \Restserver\Core\Input
+     */
+    public function delete()
     {
-         return $this->input->delete();
+        return $this->input->delete();
     }
 }
 
