@@ -2,7 +2,7 @@
 
 /**
  * REST Full server for Codeigniter 3
- * 
+ *
  * @author Yoann Vanitou <yvanitou@gmail.com>
  * @license http://www.apache.org/licenses/LICENSE-2.0
  * @link   https://github.com/maltyxx/restserver
@@ -214,13 +214,16 @@ class Test extends CI_Controller
             'limit'   => 10
         ));
 
-        $result = $response['status'] === true && $response['value'][0]['id'] == 1;
+        if (!empty($response['status']) && $response['status'] === true) {
+            $result = $response['value'][0]['id'] == 1;
+        } else {
+            $result = 'EMPTY RESPONSE';
+        }
 
         $this->restclient->debug();
 
         $this->unit->run($result, true, "get by GET id");
     }
-
 }
 
 /* End of file Origami_test.php */
