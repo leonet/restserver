@@ -81,9 +81,9 @@ class Restserver
     public function initialize(array $config = array())
     {
         $this->config = new \Restserver\Core\Config($config);
-        $this->server = new \Restserver\Core\Server();
         $this->rules = new \Restserver\Core\Rules();
         $this->input = new \Restserver\Core\Input();
+        $this->server = new \Restserver\Core\Server();
     }
 
     /**
@@ -114,7 +114,7 @@ class Restserver
      * @param  array    $key
      * @return \Restserver\Core\Input
      */
-    public function input($key)
+    public function input($key = null)
     {
         return $this->input->getData($key);
     }
@@ -134,9 +134,9 @@ class Restserver
      * @author Yoann VANITOU <y.vanitou@santiane.fr>
      * @return \Restserver\Core\Input
      */
-    public function post($key)
+    public function post($key = null)
     {
-        return $this->input->post();
+        return $this->input->post($key);
     }
 
     /**
@@ -144,9 +144,9 @@ class Restserver
      * @author Yoann VANITOU <y.vanitou@santiane.fr>
      * @return \Restserver\Core\Input
      */
-    public function get()
+    public function get($key = null)
     {
-        return $this->input->get();
+        return $this->input->get($key);
     }
 
     /**
@@ -154,9 +154,9 @@ class Restserver
      * @author Yoann VANITOU <y.vanitou@santiane.fr>
      * @return \Restserver\Core\Input
      */
-    public function put()
+    public function put($key = null)
     {
-        return $this->input->put();
+        return $this->input->put($key);
     }
 
     /**
@@ -164,9 +164,9 @@ class Restserver
      * @author Yoann VANITOU <y.vanitou@santiane.fr>
      * @return \Restserver\Core\Input
      */
-    public function patch()
+    public function patch($key = null)
     {
-        return $this->input->patch();
+        return $this->input->patch($key);
     }
 
     /**
@@ -174,9 +174,9 @@ class Restserver
      * @author Yoann VANITOU <y.vanitou@santiane.fr>
      * @return \Restserver\Core\Input
      */
-    public function delete()
+    public function delete($key = null)
     {
-        return $this->input->delete();
+        return $this->input->delete($key);
     }
 }
 
