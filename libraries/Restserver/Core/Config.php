@@ -13,26 +13,23 @@ class Config
 
     /**
      * Restserver configuration
-     * @var array $config
      */
-    protected $config = array(
-        'allow_methods' => array('GET', 'POST', 'PUT', 'DELETE'),
-        'allow_headers' => array('X-RestServer'),
-        'allow_credentials' => false,
-        'allow_origin' => false,
-        'force_https' => false,
-        'ajax_only' => false,
-        'auth_http' => false,
-        'cache' => false,
-        'debug' => false,
-        'log' => false,
-        'log_driver' => 'file',
-        'log_db_name' => 'rest',
-        'log_db_table' => 'log',
-        'log_file_path' => '',
-        'log_file_name' => 'rest.log',
-        'log_extra' => false
-    );
+    protected $allow_methods = array('GET', 'POST', 'PUT', 'DELETE');
+    protected $allow_headers = array('X-RestServer');
+    protected $allow_credentials = false;
+    protected $allow_origin = false;
+    protected $force_https = false;
+    protected $ajax_only = false;
+    protected $auth_http = false;
+    protected $cache = false;
+    protected $debug = false;
+    protected $log = false;
+    protected $log_driver = 'file';
+    protected $log_db_name = 'rest';
+    protected $log_db_table = 'log';
+    protected $log_file_path = '';
+    protected $log_file_name = 'rest.log';
+    protected $log_extra = fals;
 
     /**
      * Class cosntructor
@@ -45,7 +42,7 @@ class Config
         $this->CI =& get_instance();
 
         // If any configuration data was sent to the class constructor
-        empty($config) or $this->run($config);
+        empty($config) or $this->initialize($config);
     }
 
     /**
@@ -54,7 +51,7 @@ class Config
      * @param  array  $config Personal config vars
      * @return array         [description]
      */
-    public function run(array $config = array())
+    public function initialize(array $config = array())
     {
         // Append configuration to Config object
         if (!empty($config)) {

@@ -52,3 +52,6 @@ class Cross_domain
         }
     }
 }
+
+/* End of file Cross_domain.php */
+/* Location: ./Restserver/Output/Cross_domain.php */
