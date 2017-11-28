@@ -6,20 +6,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 require(__DIR__.'/Core/Config.php');
 require(__DIR__.'/Core/Server.php');
-require(__DIR__.'/Core/Rule.php');
-require(__DIR__.'/Core/Validation.php');
 require(__DIR__.'/Core/Input.php');
 require(__DIR__.'/Core/Output.php');
+
+require(__DIR__.'/Manager/Rules.php');
+require(__DIR__.'/Manager/Validation.php');
+
+require(__DIR__.'/Input/Rule.php');
 require(__DIR__.'/Input/Data.php');
 require(__DIR__.'/Input/Filter.php');
 require(__DIR__.'/Input/Limit.php');
 require(__DIR__.'/Input/Page.php');
 require(__DIR__.'/Input/Sorter.php');
 require(__DIR__.'/Input/Start.php');
+
 require(__DIR__.'/Output/Cross.php');
-require(__DIR__.'/Output/Doc.php');
+require(__DIR__.'/Output/Help.php');
 require(__DIR__.'/Output/Har.php');
 require(__DIR__.'/Output/Response.php');
+
 require(__DIR__.'/Log/Model.php');
 
 /**
@@ -82,7 +87,7 @@ class Restserver
     {
         $this->config = new \Restserver\Core\Config($config);
         $this->server = new \Restserver\Core\Server();
-        $this->input = new \Restserver\Manager\Input();
+        $this->input = new \Restserver\Core\Input();
         $this->rules = new \Restserver\Manager\Rules();
     }
 

@@ -10,7 +10,7 @@ class Input
     public function __construct()
     {
         $this->CI =& get_instance();
-        $this->CI->load->library('url');
+        $this->CI->load->helper('url');
     }
 
     /**
@@ -52,7 +52,7 @@ class Input
         $headers = $this->CI->input->request_headers(true);
         return (!empty($headers)) ? $headers : array();
     }
-    
+
     /**
      * Si le protocol est de type HTTPS
      * @return boolean
@@ -61,7 +61,7 @@ class Input
     {
         return ($this->CI->input->server('HTTPS') == 'on');
     }
-    
+
     public function isAjaxRequest()
     {
         return $this->CI->input->is_ajax_request();
@@ -119,7 +119,6 @@ class Input
             'delete' => (is_array($delete)) ? $delete : array()
         );
     }
-    
 }
 
 /* End of file Input.php */
