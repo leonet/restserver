@@ -557,11 +557,13 @@ class Restserver
     /**
      * Les données entrantes
      * @param string|null $key
-     * @param boolean $xss_clean
+     * @param boolean|NULL $xss_clean
      * @return array|booblean
      */
-    private function _fetch_from_array($method, $index = NULL, $xss_clean = FALSE)
+    private function _fetch_from_array($method, $index = NULL, $xss_clean = NULL)
     {
+        is_bool($xss_clean) OR $xss_clean = $this->CI->config->item('global_xss_filtering');
+        
         // Si l'index n'est définie on récupère l'ensemble de l'input
         if (empty($index)) {
             $index = array_keys($this->input[$method]);
