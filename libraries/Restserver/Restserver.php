@@ -399,12 +399,14 @@ class Restserver
         if (!empty($filter)) {
             $filter = json_decode($filter, TRUE);
 
-            foreach ($filter as $value) {
-                if (isset($value['property'])) {
-                    if (!isset($filters[$value['property']])) {
-                        $filters[$value['property']] = $value['value'];
-                    } else {
-                        $filters[$value['property']] .= ',' . $value['value'];
+            if (!empty($filter)) {
+                foreach ($filter as $value) {
+                    if (isset($value['property'])) {
+                        if (!isset($filters[$value['property']])) {
+                            $filters[$value['property']] = $value['value'];
+                        } else {
+                            $filters[$value['property']] .= ',' . $value['value'];
+                        }
                     }
                 }
             }
