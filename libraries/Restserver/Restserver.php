@@ -427,12 +427,14 @@ class Restserver
         if (!empty($sort)) {
             $sort = json_decode($sort, TRUE);
 
-            foreach ($sort as $value) {
-                if (isset($value['property'])) {
-                    if (!isset($sorts[$value['property']])) {
-                        $sorts[$value['property']] = $value['direction'];
-                    } else {
-                        $sorts[$value['property']] .= ',' . $value['direction'];
+            if (!empty($sort)) {
+                foreach ($sort as $value) {
+                    if (isset($value['property'])) {
+                        if (!isset($sorts[$value['property']])) {
+                            $sorts[$value['property']] = $value['direction'];
+                        } else {
+                            $sorts[$value['property']] .= ',' . $value['direction'];
+                        }
                     }
                 }
             }
